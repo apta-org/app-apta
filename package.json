@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "American Progressive Telugu Association - API",
   "scripts": {
-    "test": "./node_modules/.bin/standard && ./node_modules/.bin/lab --leaks",
+    "test": "gulp test",
     "test-cov-html": "node node_modules/lab/bin/lab -a code -r html -o coverage.html",
     "start": "gulp start",
     "quality": "gulp quality",
