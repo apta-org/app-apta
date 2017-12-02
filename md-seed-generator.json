@@ -1,0 +1,4 @@
+{
+  "es6": true,
+  "seedsFolder": "./lib/resources/seeders"
+}

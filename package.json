@@ -38,7 +38,11 @@
     "joi": "^13.0.0",
     "lodash": "^4.17.4",
     "lout": "^10.0.3",
+    "mongoose": "^4.10.8",
+    "mongoose-data-seed": "^1.0.2",
+    "mongoose-unique-validator": "^1.0.6",
     "poop": "^3.0.0",
+    "uid2": "0.0.3",
     "vision": "^4.1.1"
   },
   "devDependencies": {
