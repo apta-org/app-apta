@@ -1,4 +1,4 @@
-# ![Node/Hapi.JS/APTA Application](.github/project-logo.png) APTA API Service
+# ![Node/Hapi.JS/APTA Application](.github/project-logo.png)
 
 [![Build Status](https://img.shields.io/travis/guillaumemaka/realworld-starter-kit-hapijs.svg?branch=master&style=flat-square)](https://travis-ci.org/guillaumemaka/realworld-starter-kit-hapijs)
 [![Code Climate](https://img.shields.io/codeclimate/github/guillaumemaka/realworld-starter-kit-hapijs.svg?style=flat-square)](https://codeclimate.com/github/guillaumemaka/realworld-starter-kit-hapijs)
