@@ -71,8 +71,8 @@ HapiJS auth mecanism provide 3 [Authentications mode](https://hapijs.com/api#rou
 
 [Joi](https://github.com/hapijs/joi) is used for validating request params/payload and response payload.
 
-# Documentation
+# API Documentation
 
-We use [hapi-swagger](https://github.com/glennjones/hapi-swagger) for the API endpoints documentation. Documentation available at `http://localhost:8080/docs`.
+We use [hapi-swagger](https://github.com/glennjones/hapi-swagger) for the API endpoints documentation. Documentation available at `http://localhost:8080`.
 
 # Troubleshooting
