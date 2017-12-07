@@ -24,7 +24,7 @@ describe('modules/api/index', () => {
     it('should return http status 200', () => {
       server.inject('/api/health', (res) => {
         expect(res.statusCode).to.be.equal(200)
-        let jsonResponse = JSON.parse(res.payload)
+        const jsonResponse = JSON.parse(res.payload)
         expect(jsonResponse.status).to.equal('UP')
       })
     })
@@ -34,7 +34,7 @@ describe('modules/api/index', () => {
     it('should return http status 200', () => {
       server.inject('/api/version', (res) => {
         expect(res.statusCode).to.be.equal(200)
-        let jsonResponse = JSON.parse(res.payload)
+        const jsonResponse = JSON.parse(res.payload)
         expect(jsonResponse.version).to.equal('1.0.0')
       })
     })

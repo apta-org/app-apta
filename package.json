@@ -7,7 +7,8 @@
     "test-cov-html": "node node_modules/lab/bin/lab -a code -r html -o coverage.html",
     "start": "gulp start",
     "quality": "gulp quality",
-    "e2e": "gulp e2e"
+    "e2e": "gulp e2e",
+    "seed": "gulp seed"
   },
   "main": "lib/index.js",
   "author": {
@@ -21,6 +22,7 @@
     "babel-core": "^6.26.0",
     "babel-runtime": "^6.26.0",
     "blipp": "^2.3.0",
+    "bluebird": "^3.5.1",
     "boom": "^7.1.1",
     "code": "^5.1.2",
     "getconfig": "^3.1.0",
@@ -35,13 +37,14 @@
     "hapi-swagger": "^8.0.0",
     "hoek": "^5.0.2",
     "inert": "^4.2.1",
-    "joi": "^13.0.0",
+    "joi": "^10.6.0",
     "lodash": "^4.17.4",
     "lout": "^10.0.3",
-    "mongoose": "^4.10.8",
+    "mongoose": "^4.11.1",
     "mongoose-data-seed": "^1.0.2",
     "mongoose-unique-validator": "^1.0.6",
     "poop": "^3.0.0",
+    "slug": "^0.9.1",
     "uid2": "0.0.3",
     "vision": "^4.1.1"
   },

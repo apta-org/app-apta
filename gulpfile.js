@@ -1,48 +1,51 @@
-const gulp = require('gulp')
-const shell = require('gulp-shell')
-const babel = require('gulp-babel')
-const lab = require('gulp-lab')
-const nodemon = require('gulp-nodemon')
-const nightwatch = require('gulp-nightwatch')
+const Gulp = require('gulp')
+const Shell = require('gulp-shell')
+const Babel = require('gulp-babel')
+const Lab = require('gulp-lab')
+const Nodemon = require('gulp-nodemon')
+const Nightwatch = require('gulp-nightwatch')
 
-gulp.task('default', ['start'])
+Gulp.task('default', ['start'])
 
-gulp.task('watch', () => {
-  gulp.watch('./lib/**/*.js', ['quality'])
+Gulp.task('watch', () => {
+  Gulp.watch('./lib/**/*.js', ['quality'])
 })
 
-gulp.task('quality', () => {
-  gulp.src(['**/*.js', '!./node_modules/**'])
-    .pipe(babel())
-    .pipe(lab({
-      args: '-dL',
+Gulp.task('quality', () => {
+  // Gulp.src(['**/*.js', '!./node_modules/**'])
+  Gulp.src('./test')
+    .pipe(Babel())
+    .pipe(Lab({
+      args: '-d -L -C -S -T ./node_modules/lab-babel -I __core-js_shared__',
       opts: {
         emitLabError: true
       }
     }))
 })
 
-gulp.task('test', () => {
-  gulp.src('./test')
-    .pipe(babel())
-    .pipe(lab({
-      args: '-a code -t 100 -v -C -S -T ./node_modules/lab-babel -I __core-js_shared__',
+Gulp.task('test', () => {
+  Gulp.src('./test')
+    .pipe(Babel())
+    .pipe(Lab({
+      args: '-L -a code -t 100 -v -C -S -T ./node_modules/lab-babel -I __core-js_shared__',
       opts: {
         emitLabError: true
       }
     }))
 })
 
-gulp.task('cucumber', (callback) => {
-  gulp.src('')
-    .pipe(nightwatch({
+Gulp.task('cucumber', (callback) => {
+  Gulp.src('')
+    .pipe(Nightwatch({
       configFile: './nightwatch.conf.js'
     }))
     .on('end', callback)
 })
 
-gulp.task('e2e', ['cucumber'], shell.task('node ./test-automation/hooks/create-html-report.js'))
+Gulp.task('e2e', ['cucumber'], Shell.task('node ./test-automation/hooks/create-html-report.js'))
 
-gulp.task('start', () => {
-  nodemon({ script: 'bootstrap.js', ext: 'js' })
+Gulp.task('seed', Shell.task('node node_modules/.bin/md-seed run'))
+
+Gulp.task('start', () => {
+  Nodemon({ script: 'bootstrap.js', ext: 'js' })
 })

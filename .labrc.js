@@ -2,7 +2,7 @@
 
 const internals = {
   coverage: true,
-  threshold: 90,
+  threshold: 100,
   colors: true,
   timeout: 10000,
   verbose: true,

@@ -1,4 +1,4 @@
-const chai = require('chai')
+const Chai = require('chai')
 
 require('nightwatch-cucumber')({
   cucumberArgs: [
@@ -9,11 +9,13 @@ require('nightwatch-cucumber')({
     './test-automation/features']
 })
 
-global.expect = chai.expect
-global.assert = chai.assert
-global.should = chai.should()
+// eslint-disable-next-line no-unused-vars
+global.expect = Chai.expect
+// eslint-disable-next-line no-unused-vars
+global.assert = Chai.assert
+// eslint-disable-next-line no-unused-vars
+global.should = Chai.should()
 
-// module.exports = {
 const props = {
   output_folder: 'reports',
   custom_assertions_path: '',

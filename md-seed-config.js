@@ -1,8 +1,9 @@
 import mongooseLib from 'mongoose'
+import Promise from 'bluebird'
 import config from './lib/config'
 import CourseSeeder from './lib/resources/seeders/course.seeders'
 
-mongooseLib.Promise = global.Promise
+mongooseLib.Promise = Promise
 
 export const mongoose = mongooseLib
 export const mongoURL = config.database.uri
