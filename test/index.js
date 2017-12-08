@@ -1,6 +1,6 @@
-import Code from 'code'
-import Lab from 'lab'
-import LabbableServer from '../lib'
+const Code = require('code')
+const Lab = require('lab')
+const LabbableServer = require('../lib')
 
 const lab = exports.lab = Lab.script()
 const describe = lab.describe
@@ -11,17 +11,19 @@ const expect = Code.expect
 describe('index', () => {
   let server
 
-  before(() => {
+  before((done) => {
     LabbableServer.ready((err, srv) => {
       if (err) {
-        throw err
+        return done(err)
       }
       server = srv
+      return done()
     })
   })
 
-  it('should initialize server', () => {
+  it('should initialize server', (done) => {
     expect(server).to.exist()
     expect(LabbableServer.isInitialized()).to.equal(true)
+    done()
   })
 })
