@@ -46,6 +46,8 @@ Install or Update existing node to [Node.JS LTS version](https://nodejs.org/en/d
 - [mongoose](https://github.com/Automattic/mongoose) - For modeling and mapping MongoDB data to javascript 
 - [mongoose-unique-validator](https://github.com/blakehaswell/mongoose-unique-validator) - For handling unique validation errors in Mongoose. Mongoose only handles validation at the document level, so a unique index across a collection will throw an exception at the driver level. The `mongoose-unique-validator` plugin helps us by formatting the error like a normal mongoose `ValidationError`.
 - [slug](https://github.com/dodo/node-slug) - For encoding titles into a URL-friendly format
+- Start mongodb `mongod --dbpath ~/mongodb/data/db/`
+- Start mongodb CLI `/usr/local/var/mongodb/mongo`
 
 ## Application Structure
 

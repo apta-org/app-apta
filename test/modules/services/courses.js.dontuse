@@ -1,0 +1,131 @@
+const Code = require('code')
+const Lab = require('lab')
+// const Promise = require('bluebird')
+// const DatabaseCleaner = require('database-cleaner')
+const LabbableServer = require('../../lib')
+// const Factory = require('../factories')
+
+const lab = exports.lab = Lab.script()
+const describe = lab.describe
+// const after = lab.after
+// const afterEach = lab.afterEach
+const before = lab.before
+const it = lab.it
+const expect = Code.expect
+// const databaseCleaner = new DatabaseCleaner('mongodb')
+
+// const cleanUp = (server, courses, done) => {
+//   courses.forEach((course) => {
+//     server.methods.services.delete(course, (err, removedCourse) => {
+//       expect(err).to.be.null()
+//       expect(removedCourse).to.be.an.object()
+//       done()
+//     })
+//   })
+// }
+
+describe('Service[Course]', () => {
+  let server
+  // let courses = []
+
+  before((done) => {
+    LabbableServer.ready((err, srv) => {
+      if (err) {
+        return done(err)
+      }
+      server = srv
+      return done()
+
+      // return Promise.all([
+      //   Factory.createMany('course', 5)
+      // ]).then((results) => {
+      //   courses = courses.concat(results[0])
+      // }).then(() => done()).catch(done)
+    })
+  })
+
+  // afterEach((done) => {
+  //   console.log('starting cleanup')
+  //   courses.forEach((course) => {
+  //     server.methods.services.delete(course, (err, removedCourse) => {
+  //       expect(err).to.be.null()
+  //       expect(removedCourse).to.be.an.object()
+  //       done()
+  //     })
+  //   })
+  //   console.log('ending cleanup')
+  //   return done()
+  //   // databaseCleaner.clean(server.app.db.link, () => {
+  //   //   return done()
+  //   // })
+  // })
+
+  describe('server initialization', () => {
+    it('should define courses service', (done) => {
+      expect(server.methods.services.courses).to.be.an.object()
+      expect(server.methods.services.courses.list).to.be.a.function()
+      expect(server.methods.services.courses.create).to.be.a.function()
+      expect(server.methods.services.courses.update).to.be.a.function()
+      expect(server.methods.services.courses.delete).to.be.a.function()
+      done()
+    })
+  })
+
+  describe('list courses', () => {
+    it('should return list of all courses', (done) => {
+      server.methods.services.courses.list((err, results) => {
+        expect(err).to.be.null()
+        expect(results).to.be.an.array()
+        expect(results).length(25)
+        done()
+      })
+    })
+  })
+
+  describe('create course', () => {
+    it('should create new course and return', (done) => {
+      const payload = {
+        name: 'CRC',
+        description: 'Some new course',
+        length: 4,
+        rank: 100
+      }
+      server.methods.services.courses.create(payload, (err, savedCourse) => {
+        expect(err).to.be.null()
+        expect(savedCourse).not.to.be.null()
+        expect(savedCourse.name).to.equal(payload.name)
+        expect(savedCourse.description).to.equal(payload.description)
+        expect(savedCourse.length).to.equal(payload.length)
+        expect(savedCourse.rank).to.equal(payload.rank)
+        done()
+      })
+    })
+
+    it('should fail to create new course and return error rank is taken', (done) => {
+      const payload = {
+        name: 'CRC',
+        description: 'Some new course',
+        length: 4,
+        rank: 1
+      }
+      server.methods.services.courses.create(payload, (err, savedCourse) => {
+        expect(err).not.to.be.null()
+        expect(savedCourse).to.be.null()
+        done()
+      })
+    })
+
+    it('should fail to create new course and return error description is required', (done) => {
+      const payload = {
+        name: 'CRC',
+        length: 4,
+        rank: 1
+      }
+      server.methods.services.courses.create(payload, (err, savedCourse) => {
+        expect(err).not.to.be.null()
+        expect(savedCourse).to.be.null()
+        done()
+      })
+    })
+  })
+})

@@ -11,7 +11,7 @@ Gulp.task('watch', () => {
 
 Gulp.task('quality', Shell.task('./node_modules/.bin/standard && ./node_modules/.bin/lab -d -L -t 70'))
 
-Gulp.task('test', Shell.task('./node_modules/.bin/standard && ./node_modules/.bin/lab -L -t 70'))
+Gulp.task('test', Shell.task('./node_modules/.bin/standard && ./node_modules/.bin/lab -t 70'))
 
 Gulp.task('cucumber', (callback) => {
   Gulp.src('')
