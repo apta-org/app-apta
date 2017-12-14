@@ -9,19 +9,20 @@ defineSupportCode(({ Given, When, Then }) => {
   let responseCode
   let responseData
 
-  Given(/^I open the site "([^"]*)"$/, (url, callback) => {
-    // eslint-disable-next-line no-undef
-    Chai.request(baseUrl)
-      .get('/')
-      .then((res) => {
-        responseCode = res.status
-        responseData = res.text
-        callback()
-      })
-      .catch((err) => {
-        throw err
-      })
-  })
+  Given(
+    /^I open the site "([^"]*)"$/, (url, callback) => {
+      // eslint-disable-next-line no-undef
+      Chai.request(baseUrl)
+        .get(url)
+        .then((res) => {
+          responseCode = res.status
+          responseData = res.text
+          callback()
+        })
+        .catch((err) => {
+          throw err
+        })
+    })
 
   Then(
     /^I expect the http response code to be (.+)$/, (expectedResponseCode, callback) => {

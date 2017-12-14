@@ -165,7 +165,7 @@ describe('courses endpoint', () => {
       }
       const expectedError = {
         errors: {
-          rank: [ '\'1\' is already taken' ]
+          rank: ['\'1\' is already taken']
         }
       }
 
@@ -193,7 +193,7 @@ describe('courses endpoint', () => {
       }
       const expectedError = {
         errors: {
-          length: [ '"length" must be a number' ]
+          length: ['"length" must be a number']
         }
       }
 
@@ -255,7 +255,7 @@ describe('courses endpoint', () => {
       }
       const expectedError = {
         errors: {
-          MongoError: [ 'failed to reconnect after 30 attempts with interval 1000 ms' ]
+          MongoError: ['failed to reconnect after 30 attempts with interval 1000 ms']
         }
       }
 
@@ -352,7 +352,7 @@ describe('courses endpoint', () => {
       }
       const expectedError = {
         errors: {
-          500: [ 'An internal server error occurred' ]
+          500: ['An internal server error occurred']
         }
       }
 
@@ -388,7 +388,7 @@ describe('courses endpoint', () => {
 
       const expectedError = {
         errors: {
-          400: [ 'Invalid course id' ]
+          400: ['Invalid course id']
         }
       }
 
@@ -415,7 +415,7 @@ describe('courses endpoint', () => {
 
       const expectedError = {
         errors: {
-          400: [ 'Invalid course id' ]
+          400: ['Invalid course id']
         }
       }
 
@@ -441,7 +441,7 @@ describe('courses endpoint', () => {
       }
       const expectedError = {
         errors: {
-          404: [ 'Course not found' ]
+          404: ['Course not found']
         }
       }
 

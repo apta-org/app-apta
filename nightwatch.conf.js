@@ -3,6 +3,7 @@ const Chai = require('chai')
 require('nightwatch-cucumber')({
   cucumberArgs: [
     '--compiler', 'js:babel-core/register',
+    '--require', './test-automation/hooks',
     '--require', './test-automation/steps',
     '--format', './node_modules/cucumber-pretty',
     '--format', 'json:reports/e2e/cucumber.json',

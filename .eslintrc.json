@@ -3,6 +3,10 @@
     "node": true
   },
   "extends": ["standard", "eslint-config-hapi"],
+  "globals": {
+    "expect": true,
+    "baseUrl": true
+  },
   "rules": {
     "semi": 0,
     "indent": [2, 2],

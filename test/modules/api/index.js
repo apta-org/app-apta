@@ -8,7 +8,7 @@ const before = lab.before
 const it = lab.it
 const expect = Code.expect
 
-describe('modules/api/index', () => {
+describe('health, version endpoints', () => {
   let server
 
   before((done) => {
@@ -21,7 +21,7 @@ describe('modules/api/index', () => {
     })
   })
 
-  describe('health end point', () => {
+  describe('GET /api/health', () => {
     it('should return http status 200', (done) => {
       server.inject('/api/health', (res) => {
         expect(res.statusCode).to.be.equal(200)
@@ -32,7 +32,7 @@ describe('modules/api/index', () => {
     })
   })
 
-  describe('version end point', () => {
+  describe('GET /api/version', () => {
     it('should return http status 200', (done) => {
       server.inject('/api/version', (res) => {
         expect(res.statusCode).to.be.equal(200)
