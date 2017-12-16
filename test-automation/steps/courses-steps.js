@@ -70,7 +70,6 @@ defineSupportCode(({ Given, When, Then }) => {
       url = url.replace('{id}', createdCourseId)
       Chai.request(baseUrl)
         .delete(url)
-        // .set('content-type', 'application/json')
         .then((res) => {
           responseCode = res.status
           jsonResponse = res.text
@@ -97,7 +96,7 @@ defineSupportCode(({ Given, When, Then }) => {
       expect(courses).to.be.an('array')
       expect(courses).to.have.length.above(20)
       courses.forEach((course) => {
-        expect(course).to.have.all.keys('id', 'name', 'description', 'length', 'rank')
+        expect(course).to.have.all.keys('id', 'name', 'description', 'length', 'rank', 'minimumMarks', 'allowedForProgram')
       })
       callback()
     })
@@ -127,6 +126,13 @@ defineSupportCode(({ Given, When, Then }) => {
     })
 
   Then(
+    /^the response property "([^"]*)" should be (true|false)$/, (expectedProperty, expectedPropertyValue, callback) => {
+      const flag = (expectedPropertyValue === 'true')
+      expect(jsonResponse.course).to.have.property(expectedProperty, flag)
+      callback()
+    })
+
+  Then(
     /^I expect the response is empty$/, (callback) => {
       expect(jsonResponse).to.equal('')
       callback()
@@ -134,21 +140,39 @@ defineSupportCode(({ Given, When, Then }) => {
 
   Then(
     /^the errors response should contain payload$/, (payload, callback) => {
+      let atLeastOneErrorReceived = false
       const expectedPayload = JSON.parse(payload)
       if (expectedPayload.errors.name) {
+        atLeastOneErrorReceived = true
         expect(jsonResponse.errors.name[0]).to.equal(expectedPayload.errors.name[0])
       }
       if (expectedPayload.errors.description) {
+        atLeastOneErrorReceived = true
         expect(jsonResponse.errors.description[0]).to.equal(expectedPayload.errors.description[0])
       }
       if (expectedPayload.errors.rank) {
+        atLeastOneErrorReceived = true
         expect(jsonResponse.errors.rank[0]).to.equal(expectedPayload.errors.rank[0])
       }
       if (expectedPayload.errors.length) {
+        atLeastOneErrorReceived = true
         expect(jsonResponse.errors.length[0]).to.equal(expectedPayload.errors.length[0])
       }
-      if (expectedPayload.errors.BadRequest) {
-        expect(jsonResponse.errors.BadRequest[0]).to.equal(expectedPayload.errors.BadRequest[0])
+      if (expectedPayload.errors.minimumMarks) {
+        atLeastOneErrorReceived = true
+        expect(jsonResponse.errors.minimumMarks[0]).to.equal(expectedPayload.errors.minimumMarks[0])
+      }
+      if (expectedPayload.errors.allowedForProgram) {
+        atLeastOneErrorReceived = true
+        expect(jsonResponse.errors.allowedForProgram[0]).to.equal(expectedPayload.errors.allowedForProgram[0])
+      }
+      if (`expectedPayload.errors.${BadRequest}` || `expectedPayload.errors.${NotFound}`) {
+        atLeastOneErrorReceived = true
+        expect(jsonResponse.errors).to.deep.equal(expectedPayload.errors)
+      }
+
+      if (atLeastOneErrorReceived === false) {
+        expect.fail(payload, jsonResponse, 'Unknown error received')
       }
       callback()
     })

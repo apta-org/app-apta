@@ -4,6 +4,7 @@ const { defineSupportCode } = require('cucumber')
 
 Chai.use(ChaiHttp)
 global.BadRequest = '400'
+global.NotFound = '404'
 
 // eslint-disable-next-line no-unused-vars
 defineSupportCode(({ Given }) => {

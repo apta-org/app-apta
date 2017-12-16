@@ -22,7 +22,9 @@ describe('Service [Course]', () => {
         name: 'SSC',
         description: 'Secondary School Certificate',
         length: 1,
-        rank: 1
+        rank: 1,
+        minimumMarks: 70,
+        allowedForProgram: false
       }
 
       CourseMock
@@ -40,6 +42,8 @@ describe('Service [Course]', () => {
         expect(result.description).to.equal(mockCourse.description)
         expect(result.rank).to.equal(mockCourse.rank)
         expect(result.length).to.equal(mockCourse.length)
+        expect(result.minimumMarks).to.equal(mockCourse.minimumMarks)
+        expect(result.allowedForProgram).to.equal(mockCourse.allowedForProgram)
         done()
       })
     })
@@ -73,13 +77,17 @@ describe('Service [Course]', () => {
           name: 'SSC',
           description: 'Secondary School Certificate',
           length: 1,
-          rank: 1
+          rank: 1,
+          minimumMarks: 70,
+          allowedForProgram: false
         },
         {
           name: 'Inter',
           description: 'Intermediate',
           length: 2,
-          rank: 2
+          rank: 2,
+          minimumMarks: 70,
+          allowedForProgram: true
         }
       ]
 
@@ -134,7 +142,9 @@ describe('Service [Course]', () => {
         name: 'CRC',
         description: 'Some new course',
         length: 4,
-        rank: 100
+        rank: 100,
+        minimumMarks: 70,
+        allowedForProgram: false
       }
 
       const CourseMock = Sinon.mock(Course.prototype)
@@ -150,6 +160,8 @@ describe('Service [Course]', () => {
         expect(savedCourse.description).to.equal(payload.description)
         expect(savedCourse.length).to.equal(payload.length)
         expect(savedCourse.rank).to.equal(payload.rank)
+        expect(savedCourse.minimumMarks).to.equal(payload.minimumMarks)
+        expect(savedCourse.allowedForProgram).to.equal(payload.allowedForProgram)
         done()
       })
     })
@@ -159,7 +171,9 @@ describe('Service [Course]', () => {
         name: 'CRC',
         description: 'Some new course',
         length: 4,
-        rank: 1
+        rank: 1,
+        minimumMarks: 70,
+        allowedForProgram: false
       }
       const mockError = new Error('rank 1 is already taken')
 
@@ -190,7 +204,9 @@ describe('Service [Course]', () => {
         name: 'CRC',
         description: 'Some new course',
         length: 4,
-        rank: 100
+        rank: 100,
+        minimumMarks: 70,
+        allowedForProgram: false
       }
 
       const CourseMock = Sinon.mock(Course.prototype)
@@ -206,6 +222,8 @@ describe('Service [Course]', () => {
         expect(deletedCourse.description).to.equal(payload.description)
         expect(deletedCourse.length).to.equal(payload.length)
         expect(deletedCourse.rank).to.equal(payload.rank)
+        expect(deletedCourse.minimumMarks).to.equal(payload.minimumMarks)
+        expect(deletedCourse.allowedForProgram).to.equal(payload.allowedForProgram)
         done()
       })
     })
@@ -215,7 +233,9 @@ describe('Service [Course]', () => {
         name: 'CRC',
         description: 'Some new course',
         length: 4,
-        rank: 1
+        rank: 1,
+        minimumMarks: 70,
+        allowedForProgram: false
       }
       const mockError = new Error('Failed to connect to mongodb')
 
@@ -246,13 +266,17 @@ describe('Service [Course]', () => {
         name: 'CRC',
         description: 'Some new course',
         length: 4,
-        rank: 100
+        rank: 100,
+        minimumMarks: 70,
+        allowedForProgram: false
       }
       const payload = {
         name: 'CRC',
         description: 'Some new course updated',
         length: 4,
-        rank: 100
+        rank: 100,
+        minimumMarks: 70,
+        allowedForProgram: false
       }
       const CourseMock = Sinon.mock(Course.prototype)
       CourseMock.expects('save').yields(null, payload)
@@ -267,6 +291,8 @@ describe('Service [Course]', () => {
         expect(updatedCourse.description).to.equal(payload.description)
         expect(updatedCourse.length).to.equal(payload.length)
         expect(updatedCourse.rank).to.equal(payload.rank)
+        expect(updatedCourse.minimumMarks).to.equal(payload.minimumMarks)
+        expect(updatedCourse.allowedForProgram).to.equal(payload.allowedForProgram)
         done()
       })
     })
@@ -276,13 +302,17 @@ describe('Service [Course]', () => {
         name: 'CRC',
         description: 'Some new course',
         length: 4,
-        rank: 100
+        rank: 100,
+        minimumMarks: 70,
+        allowedForProgram: false
       }
       const payload = {
         name: 'CRC',
         description: 'Some new course',
         length: 4,
-        rank: 1
+        rank: 1,
+        minimumMarks: 70,
+        allowedForProgram: false
       }
       const mockError = new Error('rank 1 is already taken')
 

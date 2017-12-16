@@ -74,14 +74,18 @@ describe('courses endpoint', () => {
         name: 'SSC',
         description: 'Secondary School Certificate',
         length: 1,
-        rank: 1
+        rank: 1,
+        minimumMarks: 70,
+        allowedForProgram: false
       })
       const course2 = new Course({
         _id: '5a2b1f784af2a383c1368212',
         name: 'Inter',
         description: 'Intermediate',
         length: 2,
-        rank: 2
+        rank: 2,
+        minimumMarks: 70,
+        allowedForProgram: true
       })
       const mockCourses = [
         course1,
@@ -120,7 +124,9 @@ describe('courses endpoint', () => {
         name: 'CRC',
         description: 'Some new course',
         length: 4,
-        rank: 100
+        rank: 100,
+        minimumMarks: 70,
+        allowedForProgram: false
       }
       const Course = Mongoose.model('Course')
       const mockCourse = new Course(payload)
@@ -142,6 +148,8 @@ describe('courses endpoint', () => {
         expect(jsonResponse.course.description).to.equal(payload.description)
         expect(jsonResponse.course.length).to.equal(payload.length)
         expect(jsonResponse.course.rank).to.equal(payload.rank)
+        expect(jsonResponse.course.minimumMarks).to.equal(payload.minimumMarks)
+        expect(jsonResponse.course.allowedForProgram).to.equal(payload.allowedForProgram)
         done()
       }).catch(done)
     })
@@ -151,7 +159,9 @@ describe('courses endpoint', () => {
         name: 'CRC',
         description: 'Some new course',
         length: 4,
-        rank: 1
+        rank: 1,
+        minimumMarks: 70,
+        allowedForProgram: false
       }
       const mockError = {
         name: 'ValidationError',
@@ -189,7 +199,9 @@ describe('courses endpoint', () => {
         name: 'CRC',
         description: 'Some new course',
         length: 'invalid_length',
-        rank: 1
+        rank: 1,
+        minimumMarks: 70,
+        allowedForProgram: false
       }
       const expectedError = {
         errors: {
@@ -218,7 +230,9 @@ describe('courses endpoint', () => {
         name: 'CRC',
         description: 'Some new course',
         length: 4,
-        rank: 100
+        rank: 100,
+        minimumMarks: 70,
+        allowedForProgram: false
       })
 
       const FindByIdMock = Sinon.mock(server.methods.services.courses)
@@ -247,7 +261,9 @@ describe('courses endpoint', () => {
         name: 'CRC',
         description: 'Some new course',
         length: 4,
-        rank: 100
+        rank: 100,
+        minimumMarks: 70,
+        allowedForProgram: false
       })
       const mockError = {
         name: 'MongoError',
@@ -287,7 +303,9 @@ describe('courses endpoint', () => {
         name: 'CRC',
         description: 'Some new course updated',
         length: 4,
-        rank: 100
+        rank: 100,
+        minimumMarks: 70,
+        allowedForProgram: false
       }
       const Course = Mongoose.model('Course')
       const foundCourseById = new Course({
@@ -295,7 +313,9 @@ describe('courses endpoint', () => {
         name: 'CRC',
         description: 'Some new course',
         length: 4,
-        rank: 100
+        rank: 100,
+        minimumMarks: 70,
+        allowedForProgram: false
       })
       const expectedUpdatedCourse = new Course(payload)
       expectedUpdatedCourse.id = courseId
@@ -320,6 +340,8 @@ describe('courses endpoint', () => {
         expect(jsonResponse.course.description).to.equal(payload.description)
         expect(jsonResponse.course.length).to.equal(payload.length)
         expect(jsonResponse.course.rank).to.equal(payload.rank)
+        expect(jsonResponse.course.minimumMarks).to.equal(payload.minimumMarks)
+        expect(jsonResponse.course.allowedForProgram).to.equal(payload.allowedForProgram)
         done()
       }).catch(done)
     })
@@ -330,7 +352,9 @@ describe('courses endpoint', () => {
         name: 'CRC',
         description: 'Some new course updated',
         length: 4,
-        rank: 100
+        rank: 100,
+        minimumMarks: 70,
+        allowedForProgram: false
       }
       const Course = Mongoose.model('Course')
       const foundCourseById = new Course({
@@ -338,7 +362,9 @@ describe('courses endpoint', () => {
         name: 'CRC',
         description: 'Some new course',
         length: 4,
-        rank: 100
+        rank: 100,
+        minimumMarks: 70,
+        allowedForProgram: false
       })
       const mockError = {
         name: 'ValidationError',
@@ -383,7 +409,9 @@ describe('courses endpoint', () => {
         name: 'CRC',
         description: 'Some new course updated',
         length: 4,
-        rank: 100
+        rank: 100,
+        minimumMarks: 70,
+        allowedForProgram: false
       }
 
       const expectedError = {
@@ -410,7 +438,9 @@ describe('courses endpoint', () => {
         name: 'CRC',
         description: 'Some new course updated',
         length: 4,
-        rank: 100
+        rank: 100,
+        minimumMarks: 70,
+        allowedForProgram: false
       }
 
       const expectedError = {
@@ -437,7 +467,9 @@ describe('courses endpoint', () => {
         name: 'CRC',
         description: 'Some new course updated',
         length: 4,
-        rank: 100
+        rank: 100,
+        minimumMarks: 70,
+        allowedForProgram: false
       }
       const expectedError = {
         errors: {

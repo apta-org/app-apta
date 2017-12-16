@@ -14,7 +14,9 @@ Feature: Courses Feature - As a user, I should be able to access courses API
         "name": "CRC",
         "description": "New Course",
         "length": 5,
-        "rank": 100
+        "rank": 100,
+        "minimumMarks": 70,
+        "allowedForProgram": false
       }
     }
     """
@@ -34,7 +36,9 @@ Feature: Courses Feature - As a user, I should be able to access courses API
         "name": "CRC",
         "description": "New Course",
         "length": 5,
-        "rank": 100
+        "rank": 100,
+        "minimumMarks": 70,
+        "allowedForProgram": false
       }
     }
     """
@@ -59,7 +63,9 @@ Feature: Courses Feature - As a user, I should be able to access courses API
         "name": "CRC1",
         "description": "New Course1",
         "length": 0,
-        "rank": 200
+        "rank": 200,
+        "minimumMarks": 70,
+        "allowedForProgram": false
       }
     }
     """
@@ -82,7 +88,9 @@ Feature: Courses Feature - As a user, I should be able to access courses API
         "name": "CRC1",
         "description": "New Course1",
         "length": 4,
-        "rank": 0
+        "rank": 0,
+        "minimumMarks": 70,
+        "allowedForProgram": false
       }
     }
     """
@@ -96,6 +104,80 @@ Feature: Courses Feature - As a user, I should be able to access courses API
       }
     """
 
+  Scenario: As a user, I request [PUT /api/courses] to create new course with minimumMarks zero
+    Given I request the API endpoint "/"
+    When I make a PUT request using "/api/courses" with payload
+    """
+    {
+      "course": {
+        "name": "CRC1",
+        "description": "New Course1",
+        "length": 4,
+        "rank": 100,
+        "minimumMarks": 0,
+        "allowedForProgram": false
+      }
+    }
+    """
+    Then I expect the http PUT response code to be 422
+    And the errors response should contain payload
+    """
+      {
+        "errors": {
+          "minimumMarks": [ "\"minimumMarks\" must be greater than 0" ]
+        }
+      }
+    """
+
+  Scenario: As a user, I request [PUT /api/courses] to create new course with invalid allowedForProgram
+    Given I request the API endpoint "/"
+    When I make a PUT request using "/api/courses" with payload
+    """
+    {
+      "course": {
+        "name": "CRC1",
+        "description": "New Course1",
+        "length": 4,
+        "rank": 100,
+        "minimumMarks": 70,
+        "allowedForProgram": "illegal"
+      }
+    }
+    """
+    Then I expect the http PUT response code to be 422
+    And the errors response should contain payload
+    """
+      {
+        "errors": {
+          "allowedForProgram": [ "\"allowedForProgram\" must be a boolean" ]
+        }
+      }
+    """
+
+  Scenario: As a user, I request [PUT /api/courses] to create new course with missing allowedForProgram
+    Given I request the API endpoint "/"
+    When I make a PUT request using "/api/courses" with payload
+    """
+    {
+      "course": {
+        "name": "CRC1",
+        "description": "New Course1",
+        "length": 4,
+        "rank": 100,
+        "minimumMarks": 70
+      }
+    }
+    """
+    Then I expect the http PUT response code to be 422
+    And the errors response should contain payload
+    """
+      {
+        "errors": {
+          "allowedForProgram": [ "\"allowedForProgram\" is required" ]
+        }
+      }
+    """
+
   Scenario: As a user, I request [UPDATE /api/courses] to update a course
     Given I request the API endpoint "/"
     When I make an UPDATE request using "/api/courses/{id}" with payload
@@ -105,7 +187,9 @@ Feature: Courses Feature - As a user, I should be able to access courses API
         "name": "CRC",
         "description": "New Course 1",
         "length": 5,
-        "rank": 100
+        "rank": 100,
+        "minimumMarks": 70,
+        "allowedForProgram": true
       }
     }
     """
@@ -115,6 +199,8 @@ Feature: Courses Feature - As a user, I should be able to access courses API
     And the response property "description" should be "New Course 1"
     And the response property "length" should be 5
     And the response property "rank" should be 100
+    And the response property "minimumMarks" should be 70
+    And the response property "allowedForProgram" should be true
 
   Scenario: As a user, I request [UPDATE /api/courses] to update a course with invalid id
     Given I request the API endpoint "/"
@@ -125,7 +211,9 @@ Feature: Courses Feature - As a user, I should be able to access courses API
         "name": "CRC",
         "description": "New Course 1",
         "length": 5,
-        "rank": 100
+        "rank": 100,
+        "minimumMarks": 70,
+        "allowedForProgram": false
       }
     }
     """
@@ -148,7 +236,9 @@ Feature: Courses Feature - As a user, I should be able to access courses API
         "name": "CRC",
         "description": "New Course 1",
         "length": 5,
-        "rank": 100
+        "rank": 100,
+        "minimumMarks": 70,
+        "allowedForProgram": false
       }
     }
     """
