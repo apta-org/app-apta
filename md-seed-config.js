@@ -2,6 +2,7 @@ const MongooseLib = require('mongoose')
 const Promise = require('bluebird')
 const Config = require('./lib/config')
 const CourseSeeder = require('./lib/resources/seeders/course.seeders')
+const RuleSeeder = require('./lib/resources/seeders/rule.seeders.js')
 
 MongooseLib.Promise = Promise
 
@@ -15,7 +16,8 @@ const mongoConfig = {
    * @type {{Courses: CourseSeeder}}
    */
   seedersList: {
-    CourseSeeder
+    CourseSeeder,
+    RuleSeeder
   }
 }
 
