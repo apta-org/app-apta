@@ -9,11 +9,9 @@ const RESPONSE_CODE = 'RESPONSE_CODE'
 const RESPONSE_VALUE = 'RESPONSE_VALUE'
 const dataMap = new Map()
 
-// eslint-disable-next-line no-unused-vars
-defineSupportCode(({ Given, Then }) => {
+defineSupportCode(({ Given, When, Then }) => {
   Given(
     /^I request the API endpoint "([^"]*)"$/, (url, callback) => {
-      // eslint-disable-next-line no-undef
       Chai.request(baseUrl)
         .get('')
         .then((res) => {
@@ -25,9 +23,23 @@ defineSupportCode(({ Given, Then }) => {
         })
     })
 
+  When(
+    /^I make a GET request using "([^"]*)"$/, (url, callback) => {
+      Chai.request(baseUrl)
+        .get(url)
+        .set('content-type', 'application/json')
+        .then((res) => {
+          dataMap.set(RESPONSE_CODE, res.status)
+          dataMap.set(RESPONSE_VALUE, JSON.parse(res.text))
+          callback()
+        })
+        .catch((err) => {
+          throw err
+        })
+    })
+
   Then(
     /^I expect the http (GET|PUT|POST|DELETE) response code to be (.+)$/, (requestType, expectedResponseCode, callback) => {
-      // eslint-disable-next-line no-undef
       const responseCode = dataMap.get(RESPONSE_CODE)
       expect(Number(expectedResponseCode)).to.equal(responseCode)
       callback()

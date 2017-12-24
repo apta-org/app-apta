@@ -10,22 +10,6 @@ defineSupportCode(({ When, Then }) => {
   let createdCourseId
 
   When(
-    /^I make a GET request using "([^"]*)"$/, (url, callback) => {
-      // eslint-disable-next-line no-undef
-      Chai.request(baseUrl)
-        .get(url)
-        .set('content-type', 'application/json')
-        .then((res) => {
-          dataMap.set(Commons.RESPONSE_CODE, res.status)
-          dataMap.set(Commons.RESPONSE_VALUE, JSON.parse(res.text))
-          callback()
-        })
-        .catch((err) => {
-          throw err
-        })
-    })
-
-  When(
     /^I make a PUT request using "([^"]*)" with payload$/, (url, payload, callback) => {
       const jsonPayload = JSON.parse(payload)
       Chai.request(baseUrl)

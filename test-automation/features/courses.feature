@@ -178,7 +178,7 @@ Feature: Courses Feature - As a user, I should be able to access courses API
       }
     """
 
-  Scenario: As a user, I request [UPDATE /api/courses] to update a course
+  Scenario: As a user, I request [POST /api/courses] to update a course
     Given I request the API endpoint "/"
     When I make an UPDATE request using "/api/courses/{id}" with payload
     """
@@ -202,7 +202,7 @@ Feature: Courses Feature - As a user, I should be able to access courses API
     And the response property "minimumMarks" should be 70
     And the response property "allowedForProgram" should be true
 
-  Scenario: As a user, I request [UPDATE /api/courses] to update a course with invalid id
+  Scenario: As a user, I request [POST /api/courses] to update a course with invalid id
     Given I request the API endpoint "/"
     When I make an UPDATE request using "/api/courses/junk_id" with payload
     """
@@ -227,7 +227,7 @@ Feature: Courses Feature - As a user, I should be able to access courses API
       }
     """
 
-  Scenario: As a user, I request [UPDATE /api/courses] to update a course that is not existing
+  Scenario: As a user, I request [POST /api/courses] to update a course that is not existing
     Given I request the API endpoint "/"
     When I make an UPDATE request using "/api/courses/5a2b1f784af2a383c1361234" with payload
     """
