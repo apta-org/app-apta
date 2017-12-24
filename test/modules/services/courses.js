@@ -69,6 +69,61 @@ describe('Service [Course]', () => {
     })
   })
 
+  describe('fetch course by name', () => {
+    it('should return a course by name', (done) => {
+      const courseName = 'SSC'
+      const CourseMock = Sinon.mock(Course)
+      const mockCourse = {
+        name: 'SSC',
+        description: 'Secondary School Certificate',
+        length: 1,
+        rank: 1,
+        minimumMarks: 70,
+        allowedForProgram: false
+      }
+
+      CourseMock
+        .expects('findOne')
+        .withArgs({ name: courseName })
+        .chain('exec')
+        .resolves(mockCourse)
+
+      Service[5].method(courseName, (err, result) => {
+        CourseMock.verify()
+        CourseMock.restore()
+        expect(err).to.be.null()
+        expect(result).to.be.not.null()
+        expect(result.name).to.equal(mockCourse.name)
+        expect(result.description).to.equal(mockCourse.description)
+        expect(result.rank).to.equal(mockCourse.rank)
+        expect(result.length).to.equal(mockCourse.length)
+        expect(result.minimumMarks).to.equal(mockCourse.minimumMarks)
+        expect(result.allowedForProgram).to.equal(mockCourse.allowedForProgram)
+        done()
+      })
+    })
+
+    it('should fail to return course by name with an error', (done) => {
+      const courseName = 'SSC'
+      const CourseMock = Sinon.mock(Course)
+      const mockError = new Error('Failed to connect to mongodb')
+
+      CourseMock
+        .expects('findOne')
+        .withArgs({ name: courseName })
+        .chain('exec')
+        .resolves(mockError)
+
+      Service[5].method(courseName, (err, result) => {
+        CourseMock.verify()
+        CourseMock.restore()
+        expect(err).to.be.not.null()
+        expect(result).to.be.null()
+        done()
+      })
+    })
+  })
+
   describe('list courses', () => {
     it('should return list of courses', (done) => {
       const CourseMock = Sinon.mock(Course)

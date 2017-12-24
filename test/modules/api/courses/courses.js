@@ -57,6 +57,10 @@ describe('courses endpoint', () => {
       value: server.methods.services.courses.findById,
       configurable: true
     })
+    Object.defineProperty(server.methods.services.courses, 'findByName', {
+      value: server.methods.services.courses.findByName,
+      configurable: true
+    })
     return done()
   })
 
@@ -64,6 +68,89 @@ describe('courses endpoint', () => {
     expect(server).to.exist()
     expect(LabbableServer.isInitialized()).to.equal(true)
     done()
+  })
+
+  describe('GET /api/courses/{courseName}', () => {
+    it('should return a course by name', (done) => {
+      const Course = Mongoose.model('Course')
+      const mockCourse = new Course({
+        _id: '5a2b1f784af2a383c1368234',
+        name: 'SSC',
+        description: 'Secondary School Certificate',
+        length: 1,
+        rank: 1,
+        minimumMarks: 70,
+        allowedForProgram: false
+      })
+
+      const CourseMock = Sinon.mock(server.methods.services.courses)
+      CourseMock.expects('findByName').withArgs(mockCourse.name).yields(null, mockCourse)
+      server.inject({
+        method: 'GET',
+        url: `/api/courses/${mockCourse.name}`
+      }).then((res) => {
+        CourseMock.verify()
+        CourseMock.restore()
+        expect(res.statusCode).to.be.equal(200)
+        expect(res.payload.course).to.be.not.null()
+        const jsonResponse = JSON.parse(res.payload)
+        expect(jsonResponse.course.name).to.equal(mockCourse.name)
+        expect(jsonResponse.course.description).to.equal(mockCourse.description)
+        expect(jsonResponse.course.length).to.equal(mockCourse.length)
+        expect(jsonResponse.course.rank).to.equal(mockCourse.rank)
+        expect(jsonResponse.course.minimumMarks).to.equal(mockCourse.minimumMarks)
+        expect(jsonResponse.course.allowedForProgram).to.equal(mockCourse.allowedForProgram)
+        done()
+      }).catch(done)
+    })
+
+    it('should fail to return course by name', (done) => {
+      const courseName = 'SSC'
+      const mockError = {
+        name: 'MongoError',
+        message: 'failed to reconnect after 30 attempts with interval 1000 ms'
+      }
+      const expectedError = {
+        errors: {
+          MongoError: ['failed to reconnect after 30 attempts with interval 1000 ms']
+        }
+      }
+      const CourseMock = Sinon.mock(server.methods.services.courses)
+      CourseMock.expects('findByName').withArgs(courseName).yields(mockError, null)
+      server.inject({
+        method: 'GET',
+        url: `/api/courses/${courseName}`
+      }).then((res) => {
+        CourseMock.verify()
+        CourseMock.restore()
+        expect(res.statusCode).to.equal(422)
+        expect(res.payload).to.be.not.null()
+        expect(JSON.parse(res.payload)).to.equal(expectedError)
+        done()
+      }).catch(done)
+    })
+
+    it('should return course by name not found error', (done) => {
+      const courseName = 'test'
+      const expectedError = {
+        errors: {
+          404: ['Course \'test\' not found']
+        }
+      }
+      const CourseMock = Sinon.mock(server.methods.services.courses)
+      CourseMock.expects('findByName').withArgs(courseName).yields(null, null)
+      server.inject({
+        method: 'GET',
+        url: `/api/courses/${courseName}`
+      }).then((res) => {
+        CourseMock.verify()
+        CourseMock.restore()
+        expect(res.statusCode).to.equal(404)
+        expect(res.payload).to.be.not.null()
+        expect(JSON.parse(res.payload)).to.equal(expectedError)
+        done()
+      }).catch(done)
+    })
   })
 
   describe('GET /api/courses', () => {
