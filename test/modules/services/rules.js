@@ -257,10 +257,11 @@ describe('Service [Rule]', () => {
     it('should return only one rule by course and academic year', (done) => {
       const RuleMock = Sinon.mock(Rule)
 
-      let expectedRules = []
+      const expectedRules = []
       expectedRules.push(mockRules[0])
       RuleMock
-        .expects('find').withArgs({ course: course, academicYear: 1, enabled: true })
+        .expects('find')
+        .withArgs({ course: course, academicYear: 1, enabled: true })
         .chain('sort', { order: 1 })
         .chain('exec')
         .resolves(expectedRules)
@@ -277,7 +278,7 @@ describe('Service [Rule]', () => {
     it('should return two rules by course and academic year', (done) => {
       const RuleMock = Sinon.mock(Rule)
 
-      let expectedRules = []
+      const expectedRules = []
       expectedRules.push(mockRules[1])
       expectedRules.push(mockRules[2])
 

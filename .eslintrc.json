@@ -5,7 +5,9 @@
   "extends": ["standard", "eslint-config-hapi"],
   "globals": {
     "expect": true,
-    "baseUrl": true
+    "baseUrl": true,
+    "BadRequest": true,
+    "NotFound": true
   },
   "rules": {
     "semi": 0,
@@ -13,6 +15,7 @@
     "hapi/hapi-scope-start": 0,
     "space-before-function-paren": ["error", "always"],
     "no-unused-vars": ["error", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }],
-    "brace-style": [2, "1tbs", { "allowSingleLine": false }]
+    "brace-style": [2, "1tbs", { "allowSingleLine": false }],
+    "object-shorthand": 0
   }
 }

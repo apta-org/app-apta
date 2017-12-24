@@ -431,7 +431,6 @@ describe('rules endpoint', () => {
     })
 
     it('should fail to update rule and return invalid rule id error', (done) => {
-      const ruleId = 'junk_id'
       const expectedError = {
         errors: {
           400: ['Invalid rule id']
@@ -441,7 +440,7 @@ describe('rules endpoint', () => {
       server.inject({
         method: 'POST',
         payload: { rule: payload },
-        url: `/api/rules/${ruleId}`
+        url: '/api/rules/junk_id'
       }).then((res) => {
         expect(res.statusCode).to.equal(400)
         expect(res.payload).to.be.not.null()
