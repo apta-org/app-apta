@@ -1,13 +1,12 @@
 const Chai = require('chai')
 const ChaiHttp = require('chai-http')
 const { defineSupportCode } = require('cucumber')
+const Commons = require('./common-steps')
 
 Chai.use(ChaiHttp)
+const dataMap = Commons.dataMap
 
-// eslint-disable-next-line no-unused-vars
-defineSupportCode(({ Given, When, Then }) => {
-  let responseCode
-  let jsonResponse
+defineSupportCode(({ When, Then }) => {
   let createdCourseId
 
   When(
@@ -17,8 +16,8 @@ defineSupportCode(({ Given, When, Then }) => {
         .get(url)
         .set('content-type', 'application/json')
         .then((res) => {
-          responseCode = res.status
-          jsonResponse = JSON.parse(res.text)
+          dataMap.set(Commons.RESPONSE_CODE, res.status)
+          dataMap.set(Commons.RESPONSE_VALUE, JSON.parse(res.text))
           callback()
         })
         .catch((err) => {
@@ -34,13 +33,13 @@ defineSupportCode(({ Given, When, Then }) => {
         .set('content-type', 'application/json')
         .send(jsonPayload)
         .then((res) => {
-          responseCode = res.status
-          jsonResponse = JSON.parse(res.text)
+          dataMap.set(Commons.RESPONSE_CODE, res.status)
+          dataMap.set(Commons.RESPONSE_VALUE, JSON.parse(res.text))
           callback()
         })
         .catch((err) => {
-          responseCode = err.status
-          jsonResponse = JSON.parse(err.response.text)
+          dataMap.set(Commons.RESPONSE_CODE, err.status)
+          dataMap.set(Commons.RESPONSE_VALUE, JSON.parse(err.response.text))
           callback()
         })
     })
@@ -54,13 +53,13 @@ defineSupportCode(({ Given, When, Then }) => {
         .set('content-type', 'application/json')
         .send(jsonPayload)
         .then((res) => {
-          responseCode = res.status
-          jsonResponse = JSON.parse(res.text)
+          dataMap.set(Commons.RESPONSE_CODE, res.status)
+          dataMap.set(Commons.RESPONSE_VALUE, JSON.parse(res.text))
           callback()
         })
         .catch((err) => {
-          responseCode = err.status
-          jsonResponse = JSON.parse(err.response.text)
+          dataMap.set(Commons.RESPONSE_CODE, err.status)
+          dataMap.set(Commons.RESPONSE_VALUE, JSON.parse(err.response.text))
           callback()
         })
     })
@@ -71,28 +70,20 @@ defineSupportCode(({ Given, When, Then }) => {
       Chai.request(baseUrl)
         .delete(url)
         .then((res) => {
-          responseCode = res.status
-          jsonResponse = res.text
+          dataMap.set(Commons.RESPONSE_CODE, res.status)
+          dataMap.set(Commons.RESPONSE_VALUE, res.text)
           callback()
         })
         .catch((err) => {
-          responseCode = err.status
-          jsonResponse = JSON.parse(err.response.text)
+          dataMap.set(Commons.RESPONSE_CODE, err.status)
+          dataMap.set(Commons.RESPONSE_VALUE, JSON.parse(err.response.text))
           callback()
         })
-    })
-
-  Then(
-    /^I expect the http (GET|PUT|POST|DELETE) response code to be (.+)$/, (requestType, expectedResponseCode, callback) => {
-      // eslint-disable-next-line no-undef
-      expect(Number(expectedResponseCode)).to.equal(responseCode)
-      callback()
     })
 
   Then(
     /^I expect the response contains list of courses$/, (callback) => {
-      // eslint-disable-next-line no-undef
-      const courses = jsonResponse.courses
+      const courses = dataMap.get(Commons.RESPONSE_VALUE).courses
       expect(courses).to.be.an('array')
       expect(courses).to.have.length.above(20)
       courses.forEach((course) => {
@@ -103,6 +94,7 @@ defineSupportCode(({ Given, When, Then }) => {
 
   Then(
     /^the response (should|should not) contain a property "([^"]*)"$/, (expression, property, callback) => {
+      const jsonResponse = dataMap.get(Commons.RESPONSE_VALUE)
       expect(jsonResponse.course).to.be.an('object')
       if (expression === 'should not') {
         expect(jsonResponse.course).to.not.have.property(property)
@@ -115,18 +107,21 @@ defineSupportCode(({ Given, When, Then }) => {
 
   Then(
     /^the response property "([^"]*)" should be "([^"]*)"/, (expectedProperty, expectedPropertyValue, callback) => {
+      const jsonResponse = dataMap.get(Commons.RESPONSE_VALUE)
       expect(jsonResponse.course).to.have.property(expectedProperty, expectedPropertyValue)
       callback()
     })
 
   Then(
     /^the response property "([^"]*)" should be (\d+)$/, (expectedProperty, expectedPropertyValue, callback) => {
+      const jsonResponse = dataMap.get(Commons.RESPONSE_VALUE)
       expect(jsonResponse.course).to.have.property(expectedProperty, expectedPropertyValue)
       callback()
     })
 
   Then(
     /^the response property "([^"]*)" should be (true|false)$/, (expectedProperty, expectedPropertyValue, callback) => {
+      const jsonResponse = dataMap.get(Commons.RESPONSE_VALUE)
       const flag = (expectedPropertyValue === 'true')
       expect(jsonResponse.course).to.have.property(expectedProperty, flag)
       callback()
@@ -134,44 +129,46 @@ defineSupportCode(({ Given, When, Then }) => {
 
   Then(
     /^I expect the response is empty$/, (callback) => {
+      const jsonResponse = dataMap.get(Commons.RESPONSE_VALUE)
       expect(jsonResponse).to.equal('')
       callback()
     })
 
   Then(
     /^the errors response should contain payload$/, (payload, callback) => {
-      let atLeastOneErrorReceived = false
+      const jsonResponse = dataMap.get(Commons.RESPONSE_VALUE)
+      const collectedErrors = []
       const expectedPayload = JSON.parse(payload)
       if (expectedPayload.errors.name) {
-        atLeastOneErrorReceived = true
+        collectedErrors.push(jsonResponse.errors)
         expect(jsonResponse.errors.name[0]).to.equal(expectedPayload.errors.name[0])
       }
       if (expectedPayload.errors.description) {
-        atLeastOneErrorReceived = true
+        collectedErrors.push(jsonResponse.errors)
         expect(jsonResponse.errors.description[0]).to.equal(expectedPayload.errors.description[0])
       }
       if (expectedPayload.errors.rank) {
-        atLeastOneErrorReceived = true
+        collectedErrors.push(jsonResponse.errors)
         expect(jsonResponse.errors.rank[0]).to.equal(expectedPayload.errors.rank[0])
       }
       if (expectedPayload.errors.length) {
-        atLeastOneErrorReceived = true
+        collectedErrors.push(jsonResponse.errors)
         expect(jsonResponse.errors.length[0]).to.equal(expectedPayload.errors.length[0])
       }
       if (expectedPayload.errors.minimumMarks) {
-        atLeastOneErrorReceived = true
+        collectedErrors.push(jsonResponse.errors)
         expect(jsonResponse.errors.minimumMarks[0]).to.equal(expectedPayload.errors.minimumMarks[0])
       }
       if (expectedPayload.errors.allowedForProgram) {
-        atLeastOneErrorReceived = true
+        collectedErrors.push(jsonResponse.errors)
         expect(jsonResponse.errors.allowedForProgram[0]).to.equal(expectedPayload.errors.allowedForProgram[0])
       }
       if (`expectedPayload.errors.${BadRequest}` || `expectedPayload.errors.${NotFound}`) {
-        atLeastOneErrorReceived = true
+        collectedErrors.push(jsonResponse.errors)
         expect(jsonResponse.errors).to.deep.equal(expectedPayload.errors)
       }
 
-      if (atLeastOneErrorReceived === false) {
+      if (!collectedErrors || collectedErrors.length === 0) {
         expect.fail(payload, jsonResponse, 'Unknown error received')
       }
       callback()
