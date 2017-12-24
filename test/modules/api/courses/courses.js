@@ -433,7 +433,7 @@ describe('courses endpoint', () => {
     })
 
     it('should fail to find a matching course and return unknown error', (done) => {
-      const courseId = null
+      const courseId = '5a2b1f784af2a383c1368258'
       const payload = {
         name: 'CRC',
         description: 'Some new course updated',
@@ -443,18 +443,27 @@ describe('courses endpoint', () => {
         allowedForProgram: false
       }
 
+      const mockError = {
+        name: '500',
+        message: 'An internal server error occurred'
+      }
       const expectedError = {
         errors: {
-          400: ['Invalid course id']
+          500: ['An internal server error occurred']
         }
       }
+
+      const FindByIdMock = Sinon.mock(server.methods.services.courses)
+      FindByIdMock.expects('findById').withArgs(courseId).yields(mockError, null)
 
       server.inject({
         method: 'POST',
         payload: { course: payload },
         url: `/api/courses/${courseId}`
       }).then((res) => {
-        expect(res.statusCode).to.equal(400)
+        FindByIdMock.verify()
+        FindByIdMock.restore()
+        expect(res.statusCode).to.equal(500)
         expect(res.payload).to.be.not.null()
         expect(JSON.parse(res.payload)).to.equal(expectedError)
         done()
