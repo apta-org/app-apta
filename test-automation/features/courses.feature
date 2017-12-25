@@ -7,7 +7,7 @@ Feature: Courses Feature - As a user, I should be able to access courses API
 
   Scenario: As a user, I request [PUT /api/courses] to create new course
     Given I request the API endpoint "/"
-    When I make a PUT request using "/api/courses" with payload
+    When I make a course PUT request using "/api/courses" with payload
     """
     {
       "course": {
@@ -21,15 +21,15 @@ Feature: Courses Feature - As a user, I should be able to access courses API
     }
     """
     Then I expect the http PUT response code to be 201
-    And the response should contain a property "id"
-    And the response property "name" should be "CRC"
-    And the response property "description" should be "New Course"
-    And the response property "length" should be 5
-    And the response property "rank" should be 100
+    And the course response should contain a property "id"
+    And the course response property "name" should be "CRC"
+    And the course response property "description" should be "New Course"
+    And the course response property "length" should be 5
+    And the course response property "rank" should be 100
 
   Scenario: As a user, I request [PUT /api/courses] to create new course with duplicate fields
     Given I request the API endpoint "/"
-    When I make a PUT request using "/api/courses" with payload
+    When I make a course PUT request using "/api/courses" with payload
     """
     {
       "course": {
@@ -56,7 +56,7 @@ Feature: Courses Feature - As a user, I should be able to access courses API
 
   Scenario: As a user, I request [PUT /api/courses] to create new course with length zero
   Given I request the API endpoint "/"
-  When I make a PUT request using "/api/courses" with payload
+  When I make a course PUT request using "/api/courses" with payload
     """
     {
       "course": {
@@ -81,7 +81,7 @@ Feature: Courses Feature - As a user, I should be able to access courses API
 
   Scenario: As a user, I request [PUT /api/courses] to create new course with rank zero
     Given I request the API endpoint "/"
-    When I make a PUT request using "/api/courses" with payload
+    When I make a course PUT request using "/api/courses" with payload
     """
     {
       "course": {
@@ -106,7 +106,7 @@ Feature: Courses Feature - As a user, I should be able to access courses API
 
   Scenario: As a user, I request [PUT /api/courses] to create new course with minimumMarks zero
     Given I request the API endpoint "/"
-    When I make a PUT request using "/api/courses" with payload
+    When I make a course PUT request using "/api/courses" with payload
     """
     {
       "course": {
@@ -131,7 +131,7 @@ Feature: Courses Feature - As a user, I should be able to access courses API
 
   Scenario: As a user, I request [PUT /api/courses] to create new course with invalid allowedForProgram
     Given I request the API endpoint "/"
-    When I make a PUT request using "/api/courses" with payload
+    When I make a course PUT request using "/api/courses" with payload
     """
     {
       "course": {
@@ -156,7 +156,7 @@ Feature: Courses Feature - As a user, I should be able to access courses API
 
   Scenario: As a user, I request [PUT /api/courses] to create new course with missing allowedForProgram
     Given I request the API endpoint "/"
-    When I make a PUT request using "/api/courses" with payload
+    When I make a course PUT request using "/api/courses" with payload
     """
     {
       "course": {
@@ -194,13 +194,13 @@ Feature: Courses Feature - As a user, I should be able to access courses API
     }
     """
     Then I expect the http POST response code to be 200
-    And the response should not contain a property "id"
-    And the response property "name" should be "CRC"
-    And the response property "description" should be "New Course 1"
-    And the response property "length" should be 5
-    And the response property "rank" should be 100
-    And the response property "minimumMarks" should be 70
-    And the response property "allowedForProgram" should be true
+    And the course response should not contain a property "id"
+    And the course response property "name" should be "CRC"
+    And the course response property "description" should be "New Course 1"
+    And the course response property "length" should be 5
+    And the course response property "rank" should be 100
+    And the course response property "minimumMarks" should be 70
+    And the course response property "allowedForProgram" should be true
 
   Scenario: As a user, I request [POST /api/courses] to update a course with invalid id
     Given I request the API endpoint "/"
