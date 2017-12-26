@@ -210,7 +210,10 @@ Feature: Rules Feature - As a user, I should be able to access rules API
 
   Scenario: As a user, I request [POST /api/rules/{ruleId}] to update a rule
     Given I request the API endpoint "/"
-    When I make an UPDATE request using "/api/rules/{id}" with payload
+    When I make a GET request using "/api/rules/Inter"
+    Then I expect the http GET response code to be 200
+    And I use rule with requiredCourseDescription "SSC New"
+    And I make an UPDATE request using "/api/rules/{id}" with payload
     """
     {
       "rule": {
@@ -222,7 +225,7 @@ Feature: Rules Feature - As a user, I should be able to access rules API
       }
     }
     """
-    Then I expect the http POST response code to be 200
+    And I expect the http POST response code to be 200
     And the rule response property "name" should be "Inter"
     And the rule response property "academicYear" should be 1
     And the rule response property "requiredCourseDescription" should be "SSC New"
@@ -280,8 +283,11 @@ Feature: Rules Feature - As a user, I should be able to access rules API
 
   Scenario: As a user, I request [DELETE /api/rules/{id}] to delete a rule
     Given I request the API endpoint "/"
-    When I make a DELETE request using "/api/rules/{id}"
-    Then I expect the http DELETE response code to be 204
+    When I make a GET request using "/api/rules/Inter"
+    Then I expect the http GET response code to be 200
+    And I use rule with requiredCourseDescription "SSC New"
+    And I make a DELETE request using "/api/rules/{id}"
+    And I expect the http DELETE response code to be 204
     And I expect the response is empty
 
   Scenario: As a user, I request [DELETE /api/rules/{id}] to delete a rule with invalid id

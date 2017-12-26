@@ -58,4 +58,17 @@ defineSupportCode(({ Then }) => {
       })
       callback()
     })
+
+  Then(
+    /^I use rule with requiredCourseDescription "([^"]*)"$/, (description, callback) => {
+      const rules = dataMap.get(Commons.RESPONSE_VALUE).rules
+      expect(rules).to.be.an('array')
+      rules.forEach((rule) => {
+        if (rule.requiredCourseDescription === description) {
+          expect(rule).to.have.all.keys('id', 'course', 'name', 'requiredCourseDescription', 'academicYear', 'qualifiedMarks', 'order', 'enabled')
+          dataMap.set(Commons.OBJECT_ID, rule.id)
+        }
+      })
+      callback()
+    })
 })

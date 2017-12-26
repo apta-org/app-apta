@@ -1,5 +1,8 @@
 const Promise = require('bluebird')
 const { defineSupportCode } = require('cucumber')
+const Commons = require('../steps/common-steps')
+
+const dataMap = Commons.dataMap
 
 defineSupportCode(({ Before, After }) => {
   Before(() => new Promise((resolve) => {
@@ -11,6 +14,7 @@ defineSupportCode(({ Before, After }) => {
   })
 
   After(() => new Promise((resolve) => {
+    dataMap.clear()
     setTimeout(() => {
       resolve()
     }, 500)

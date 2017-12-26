@@ -180,7 +180,10 @@ Feature: Courses Feature - As a user, I should be able to access courses API
 
   Scenario: As a user, I request [POST /api/courses] to update a course
     Given I request the API endpoint "/"
-    When I make an UPDATE request using "/api/courses/{id}" with payload
+    When I make a GET request using "/api/courses/CRC"
+    Then I expect the http GET response code to be 200
+    And the course response should contain a property "id"
+    And I make an UPDATE request using "/api/courses/{id}" with payload
     """
     {
       "course": {
@@ -193,7 +196,7 @@ Feature: Courses Feature - As a user, I should be able to access courses API
       }
     }
     """
-    Then I expect the http POST response code to be 200
+    And I expect the http POST response code to be 200
     And the course response should not contain a property "id"
     And the course response property "name" should be "CRC"
     And the course response property "description" should be "New Course 1"
@@ -254,8 +257,11 @@ Feature: Courses Feature - As a user, I should be able to access courses API
 
   Scenario: As a user, I request [DELETE /api/courses/{id}] to delete a course
     Given I request the API endpoint "/"
-    When I make a DELETE request using "/api/courses/{id}"
-    Then I expect the http DELETE response code to be 204
+    When I make a GET request using "/api/courses/CRC"
+    Then I expect the http GET response code to be 200
+    And the course response should contain a property "id"
+    And I make a DELETE request using "/api/courses/{id}"
+    And I expect the http DELETE response code to be 204
     And I expect the response is empty
 
 
