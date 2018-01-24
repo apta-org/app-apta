@@ -10,6 +10,8 @@ const RESPONSE_VALUE = 'RESPONSE_VALUE'
 const OBJECT_ID = 'OBJECT_ID'
 const dataMap = new Map()
 
+/* eslint-disable no-eval */
+/* eslint-disable no-unused-vars */
 defineSupportCode(({ Given, When, Then }) => {
   Given(
     /^I request the API endpoint "([^"]*)"$/, (url, callback) => {
