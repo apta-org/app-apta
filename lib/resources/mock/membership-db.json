@@ -1,0 +1,18 @@
+{
+  "members": [
+    {
+      "id": 1,
+      "firstName": "Ravi",
+      "lastName": "Kalli",
+      "email": "ravi.kalli@gmail.com",
+      "phone": "9723756287"
+    },
+    {
+      "firstName": "Innaiah",
+      "lastName": "Yenumula",
+      "email": "yinnaiah@gmail.com",
+      "phone": "7577483183",
+      "id": 2
+    }
+  ]
+}
