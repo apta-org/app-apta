@@ -2,17 +2,51 @@
   "members": [
     {
       "id": 1,
-      "firstName": "Ravi",
-      "lastName": "Kalli",
+      "first": "Ravi",
+      "last": "Kalli",
       "email": "ravi.kalli@gmail.com",
-      "phone": "9723756287"
+      "mobile": "9723756287",
+      "membership": "Life"
     },
     {
-      "firstName": "Innaiah",
-      "lastName": "Yenumula",
+      "id": 2,
+      "first": "Innaiah",
+      "last": "Yenumula",
       "email": "yinnaiah@gmail.com",
-      "phone": "7577483183",
-      "id": 2
+      "mobile": "7577483183",
+      "membership": "Life"
+    },
+    {
+      "id": 3,
+      "first": "FirstGP",
+      "last": "LastGP",
+      "email": "naiduray@gmail.com",
+      "mobile": "9726931979",
+      "membership": "Grand Patron"
+    },
+    {
+      "id": 4,
+      "first": "FirstP",
+      "last": "LastP",
+      "email": "raydeepti@yahoo.com",
+      "mobile": "9726931979",
+      "membership": "Patron"
+    },
+    {
+      "id": 5,
+      "first": "FirstA",
+      "last": "LastA",
+      "email": "yinnaiah@yahoo.com",
+      "mobile": "7577483183",
+      "membership": "Annual"
+    },
+    {
+      "id": 6,
+      "first": "FirstS",
+      "last": "LastS",
+      "email": "yinnaiah@gmail.com",
+      "mobile": "7577483183",
+      "membership": "Student"
     }
   ]
 }
