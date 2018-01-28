@@ -19,6 +19,7 @@
   ],
   "private": true,
   "dependencies": {
+    "axios": "^0.17.1",
     "blipp": "^2.3.0",
     "bluebird": "^3.5.1",
     "boom": "^7.1.1",
