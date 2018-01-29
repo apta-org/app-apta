@@ -37,7 +37,9 @@ defineSupportCode(({ Given, When, Then }) => {
           callback()
         })
         .catch((err) => {
-          throw err
+          dataMap.set(RESPONSE_CODE, err.status)
+          dataMap.set(RESPONSE_VALUE, JSON.parse(err.response.text))
+          callback()
         })
     })
 
@@ -178,6 +180,10 @@ defineSupportCode(({ Given, When, Then }) => {
       if (expectedPayload.errors.allowedForProgram) {
         collectedErrors.push(jsonResponse.errors)
         expect(jsonResponse.errors.allowedForProgram[0]).to.equal(expectedPayload.errors.allowedForProgram[0])
+      }
+      if (expectedPayload.errors.phone) {
+        collectedErrors.push(jsonResponse.errors)
+        expect(jsonResponse.errors.phone[0]).to.equal(expectedPayload.errors.phone[0])
       }
       if (`expectedPayload.errors.${BadRequest}` || `expectedPayload.errors.${NotFound}`) {
         collectedErrors.push(jsonResponse.errors)
