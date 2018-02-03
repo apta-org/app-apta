@@ -30,7 +30,6 @@ const mockStudent = new Student({
 })
 
 const assertStudent = (result) => {
-  expect(result.id).to.equal(mockStudent.id)
   expect(result.firstName).to.equal(mockStudent.firstName)
   expect(result.lastName).to.equal(mockStudent.lastName)
   expect(result.email).to.equal(mockStudent.email)
@@ -471,6 +470,124 @@ describe('students endpoint', () => {
         expect(res.statusCode).to.equal(404)
         expect(res.payload).to.be.not.null()
         expect(JSON.parse(res.payload)).to.equal(expectedError)
+        done()
+      }).catch(done)
+    })
+  })
+
+  describe('POST /api/students/', () => {
+    const payload = {
+      firstName: 'YAMINI',
+      lastName: 'GUNTUPALLI',
+      email: 'yamini@gmail.com',
+      dateOfBirth: '31/10/2001',
+      placeOfBirth: 'GUNTUR',
+      phonePrimary: '7701234567',
+      phoneSecondary: '',
+      addressLane1: 'HNO:2-3/5, SIVALAYAM STREET',
+      addressLane2: 'KOVVUR MANDAL',
+      city: 'GUNTUR',
+      district: 'GUNTUR DIST',
+      state: 'Andhra Pradesh',
+      pinCode: '500001'
+    }
+    const mockResult = {}
+    Object.assign(mockResult, payload)
+    mockResult._id = '5a7273171a07f76126e8a791'
+
+    it('should create a student and return newly created', (done) => {
+      const CreateMock = Sinon.mock(server.methods.services.students)
+      CreateMock.expects('create').withArgs(payload).yields(null, new Student(mockResult))
+      server.inject({
+        method: 'POST',
+        payload: { student: payload },
+        url: '/api/students'
+      }).then((res) => {
+        CreateMock.verify()
+        CreateMock.restore()
+        expect(res.statusCode).to.equal(201)
+        const jsonResponse = JSON.parse(res.payload)
+        expect(jsonResponse.student).to.be.not.null()
+        assertStudent(jsonResponse.student)
+        done()
+      }).catch(done)
+    })
+
+    it('should fail to create student and return error', (done) => {
+      const mockError = {
+        name: 'ValidationError',
+        errors: {
+          'email': {
+            message: 'is already taken',
+            name: 'ValidationError',
+            value: 'yamini@gmail.com'
+          }
+        }
+      }
+      const expectedError = {
+        errors: {
+          email: ['\'yamini@gmail.com\' is already taken']
+        }
+      }
+      const CreateMock = Sinon.mock(server.methods.services.students)
+      CreateMock.expects('create').withArgs(payload).yields(mockError, null)
+      server.inject({
+        method: 'POST',
+        payload: { student: payload },
+        url: '/api/students'
+      }).then((res) => {
+        CreateMock.verify()
+        CreateMock.restore()
+        expect(res.statusCode).to.equal(422)
+        expect(res.payload).to.be.not.null()
+        expect(JSON.parse(res.payload)).to.equal(expectedError)
+        done()
+      }).catch(done)
+    })
+  })
+
+  describe('PUT /api/students/{id}', () => {
+    const studentId = '5a7273171a07f76126e8a791'
+    const foundStudentById = {
+      _id: '5a7273171a07f76126e8a791',
+      firstName: 'YAMINI',
+      lastName: 'GUNTUPALLI',
+      email: 'yamini@gmail.com',
+      dateOfBirth: '31/10/2001',
+      placeOfBirth: 'GUNTUR',
+      phonePrimary: '7701234567',
+      phoneSecondary: '',
+      addressLane1: 'HNO:2-3/5, SIVALAYAM STREET',
+      addressLane2: 'KOVVUR MANDAL',
+      city: 'GUNTUR',
+      district: 'GUNTUR DIST',
+      state: 'ANDHRA PRADESH',
+      pinCode: '500001'
+    }
+    const payload = {}
+    Object.assign(payload, foundStudentById)
+    delete payload._id
+    const expectedUpdatedStudent = {}
+    Object.assign(expectedUpdatedStudent, foundStudentById)
+
+    it('should update a student and return updated', (done) => {
+      const FindByIdMock = Sinon.mock(server.methods.services.students)
+      FindByIdMock.expects('findById').withArgs(studentId).yields(null, foundStudentById)
+      const UpdateMock = Sinon.mock(server.methods.services.students)
+      UpdateMock.expects('update').withArgs(foundStudentById, payload).yields(null, new Student(expectedUpdatedStudent))
+      server.inject({
+        method: 'PUT',
+        payload: { student: payload },
+        url: `/api/students/${studentId}`
+      }).then((res) => {
+        FindByIdMock.verify()
+        FindByIdMock.restore()
+        UpdateMock.verify()
+        UpdateMock.restore()
+        expect(res.statusCode).to.equal(200)
+        const jsonResponse = JSON.parse(res.payload)
+        expect(jsonResponse.student).to.be.not.null()
+        assertStudent(jsonResponse.student)
         done()
       }).catch(done)
     })
