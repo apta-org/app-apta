@@ -129,7 +129,7 @@ describe('students endpoint', () => {
         StudentMock.verify()
         StudentMock.restore()
         expect(res.statusCode).to.be.equal(200)
-        expect(res.payload.course).to.be.not.null()
+        expect(res.payload.student).to.be.not.null()
         const jsonResponse = JSON.parse(res.payload)
         assertStudent(jsonResponse.student)
         done()
@@ -215,7 +215,7 @@ describe('students endpoint', () => {
         StudentMock.verify()
         StudentMock.restore()
         expect(res.statusCode).to.be.equal(200)
-        expect(res.payload.course).to.be.not.null()
+        expect(res.payload.student).to.be.not.null()
         const jsonResponse = JSON.parse(res.payload)
         assertStudent(jsonResponse.student)
         done()
@@ -283,7 +283,7 @@ describe('students endpoint', () => {
         StudentMock.verify()
         StudentMock.restore()
         expect(res.statusCode).to.be.equal(200)
-        expect(res.payload.course).to.be.not.null()
+        expect(res.payload.student).to.be.not.null()
         const jsonResponse = JSON.parse(res.payload)
         assertStudent(jsonResponse.student)
         done()
@@ -352,7 +352,7 @@ describe('students endpoint', () => {
         StudentMock.verify()
         StudentMock.restore()
         expect(res.statusCode).to.be.equal(200)
-        expect(res.payload.course).to.be.not.null()
+        expect(res.payload.student).to.be.not.null()
         const jsonResponse = JSON.parse(res.payload)
         assertStudent(jsonResponse.students[0])
         done()
@@ -421,7 +421,7 @@ describe('students endpoint', () => {
         StudentMock.verify()
         StudentMock.restore()
         expect(res.statusCode).to.be.equal(200)
-        expect(res.payload.course).to.be.not.null()
+        expect(res.payload.student).to.be.not.null()
         const jsonResponse = JSON.parse(res.payload)
         assertStudent(jsonResponse.students[0])
         done()
@@ -464,6 +464,144 @@ describe('students endpoint', () => {
       server.inject({
         method: 'GET',
         url: `/api/students/by-last-name?lastName=${studentLastName}`
+      }).then((res) => {
+        StudentMock.verify()
+        StudentMock.restore()
+        expect(res.statusCode).to.equal(404)
+        expect(res.payload).to.be.not.null()
+        expect(JSON.parse(res.payload)).to.equal(expectedError)
+        done()
+      }).catch(done)
+    })
+  })
+
+  describe('GET /api/students/by-phone?phone={mobile}', () => {
+    const studentPhone = '7701234567'
+
+    it('should return list of students matching by phone number', (done) => {
+      let mockStudents = []
+      mockStudents.push(mockStudent)
+      const StudentMock = Sinon.mock(server.methods.services.students)
+      StudentMock.expects('findByPhone').withArgs(studentPhone).yields(null, mockStudents)
+      server.inject({
+        method: 'GET',
+        url: `/api/students/by-phone?phone=${studentPhone}`
+      }).then((res) => {
+        StudentMock.verify()
+        StudentMock.restore()
+        expect(res.statusCode).to.be.equal(200)
+        expect(res.payload.student).to.be.not.null()
+        const jsonResponse = JSON.parse(res.payload)
+        assertStudent(jsonResponse.students[0])
+        done()
+      }).catch(done)
+    })
+
+    it('should fail to return list of students matching by phone', (done) => {
+      const mockError = {
+        name: 'MongoError',
+        message: 'failed to reconnect after 30 attempts with interval 1000 ms'
+      }
+      const expectedError = {
+        errors: {
+          MongoError: ['failed to reconnect after 30 attempts with interval 1000 ms']
+        }
+      }
+      const StudentMock = Sinon.mock(server.methods.services.students)
+      StudentMock.expects('findByPhone').withArgs(studentPhone).yields(mockError, null)
+      server.inject({
+        method: 'GET',
+        url: `/api/students/by-phone?phone=${studentPhone}`
+      }).then((res) => {
+        StudentMock.verify()
+        StudentMock.restore()
+        expect(res.statusCode).to.equal(422)
+        expect(res.payload).to.be.not.null()
+        expect(JSON.parse(res.payload)).to.equal(expectedError)
+        done()
+      }).catch(done)
+    })
+
+    it('should return students not found matching by phone number error', (done) => {
+      const expectedError = {
+        errors: {
+          404: [`Students not found with phone '${studentPhone}'`]
+        }
+      }
+      const StudentMock = Sinon.mock(server.methods.services.students)
+      StudentMock.expects('findByPhone').withArgs(studentPhone).yields(null, null)
+      server.inject({
+        method: 'GET',
+        url: `/api/students/by-phone?phone=${studentPhone}`
+      }).then((res) => {
+        StudentMock.verify()
+        StudentMock.restore()
+        expect(res.statusCode).to.equal(404)
+        expect(res.payload).to.be.not.null()
+        expect(JSON.parse(res.payload)).to.equal(expectedError)
+        done()
+      }).catch(done)
+    })
+  })
+
+  describe('GET /api/students/by-location?district={district}', () => {
+    const studentDistrict = 'Guntur Dist'
+
+    it('should return list of students matching by district', (done) => {
+      let mockStudents = []
+      mockStudents.push(mockStudent)
+      const StudentMock = Sinon.mock(server.methods.services.students)
+      StudentMock.expects('findByLocation').withArgs({ district: studentDistrict }).yields(null, mockStudents)
+      server.inject({
+        method: 'GET',
+        url: `/api/students/by-location?district=${studentDistrict}`
+      }).then((res) => {
+        StudentMock.verify()
+        StudentMock.restore()
+        expect(res.statusCode).to.be.equal(200)
+        expect(res.payload.student).to.be.not.null()
+        const jsonResponse = JSON.parse(res.payload)
+        assertStudent(jsonResponse.students[0])
+        done()
+      }).catch(done)
+    })
+
+    it('should fail to return list of students matching by district', (done) => {
+      const mockError = {
+        name: 'MongoError',
+        message: 'failed to reconnect after 30 attempts with interval 1000 ms'
+      }
+      const expectedError = {
+        errors: {
+          MongoError: ['failed to reconnect after 30 attempts with interval 1000 ms']
+        }
+      }
+      const StudentMock = Sinon.mock(server.methods.services.students)
+      StudentMock.expects('findByLocation').withArgs({ district: studentDistrict }).yields(mockError, null)
+      server.inject({
+        method: 'GET',
+        url: `/api/students/by-location?district=${studentDistrict}`
+      }).then((res) => {
+        StudentMock.verify()
+        StudentMock.restore()
+        expect(res.statusCode).to.equal(422)
+        expect(res.payload).to.be.not.null()
+        expect(JSON.parse(res.payload)).to.equal(expectedError)
+        done()
+      }).catch(done)
+    })
+
+    it('should return students not found matching by district error', (done) => {
+      const expectedError = {
+        errors: {
+          404: ['Students not found at this location']
+        }
+      }
+      const StudentMock = Sinon.mock(server.methods.services.students)
+      StudentMock.expects('findByLocation').withArgs({ district: studentDistrict }).yields(null, null)
+      server.inject({
+        method: 'GET',
+        url: `/api/students/by-location?district=${studentDistrict}`
       }).then((res) => {
         StudentMock.verify()
         StudentMock.restore()
@@ -588,6 +726,115 @@ describe('students endpoint', () => {
         const jsonResponse = JSON.parse(res.payload)
         expect(jsonResponse.student).to.be.not.null()
         assertStudent(jsonResponse.student)
+        done()
+      }).catch(done)
+    })
+
+    it('should fail to update student and return error', (done) => {
+      const mockError = {
+        name: 'ValidationError',
+        errors: {
+          '500': {
+            message: 'Failed to connect to mongodb',
+            name: 'ValidationError',
+            value: ''
+          }
+        }
+      }
+      const expectedError = {
+        errors: {
+          500: ['An internal server error occurred']
+        }
+      }
+
+      const FindByIdMock = Sinon.mock(server.methods.services.students)
+      FindByIdMock.expects('findById').withArgs(studentId).yields(null, foundStudentById)
+      const UpdateMock = Sinon.mock(server.methods.services.students)
+      UpdateMock.expects('update').withArgs(foundStudentById, payload).yields(mockError, null)
+      server.inject({
+        method: 'PUT',
+        payload: { student: payload },
+        url: `/api/students/${studentId}`
+      }).then((res) => {
+        FindByIdMock.verify()
+        FindByIdMock.restore()
+        UpdateMock.verify()
+        UpdateMock.restore()
+        expect(res.statusCode).to.equal(500)
+        expect(res.payload).to.be.not.null()
+        expect(JSON.parse(res.payload)).to.equal(expectedError)
+        done()
+      }).catch(done)
+    })
+
+    it('should fail to find a matching student and return invalid student id error', (done) => {
+      const studentId = 'junk_id'
+      const expectedError = {
+        errors: {
+          400: ['Invalid student id']
+        }
+      }
+
+      server.inject({
+        method: 'PUT',
+        payload: { student: payload },
+        url: `/api/students/${studentId}`
+      }).then((res) => {
+        expect(res.statusCode).to.equal(400)
+        expect(res.payload).to.be.not.null()
+        expect(JSON.parse(res.payload)).to.equal(expectedError)
+        done()
+      }).catch(done)
+    })
+
+    it('should fail to find a matching student and return unknown error', (done) => {
+      const mockError = {
+        name: '500',
+        message: 'An internal server error occurred'
+      }
+      const expectedError = {
+        errors: {
+          500: ['An internal server error occurred']
+        }
+      }
+
+      const FindByIdMock = Sinon.mock(server.methods.services.students)
+      FindByIdMock.expects('findById').withArgs(studentId).yields(mockError, null)
+
+      server.inject({
+        method: 'PUT',
+        payload: { student: payload },
+        url: `/api/students/${studentId}`
+      }).then((res) => {
+        FindByIdMock.verify()
+        FindByIdMock.restore()
+        expect(res.statusCode).to.equal(500)
+        expect(res.payload).to.be.not.null()
+        expect(JSON.parse(res.payload)).to.equal(expectedError)
+        done()
+      }).catch(done)
+    })
+
+    it('should fail to find a matching student and return student not found error', (done) => {
+      const expectedError = {
+        errors: {
+          404: ['Student not found']
+        }
+      }
+
+      const FindByIdMock = Sinon.mock(server.methods.services.students)
+      FindByIdMock.expects('findById').withArgs(studentId).yields(null, null)
+
+      server.inject({
+        method: 'PUT',
+        payload: { student: payload },
+        url: `/api/students/${studentId}`
+      }).then((res) => {
+        FindByIdMock.verify()
+        FindByIdMock.restore()
+        expect(res.statusCode).to.equal(404)
+        expect(res.payload).to.be.not.null()
+        expect(JSON.parse(res.payload)).to.equal(expectedError)
         done()
       }).catch(done)
     })
