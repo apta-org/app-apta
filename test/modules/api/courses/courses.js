@@ -205,7 +205,7 @@ describe('courses endpoint', () => {
     })
   })
 
-  describe('PUT /api/courses/', () => {
+  describe('POST /api/courses/', () => {
     it('should create a course and return newly created', (done) => {
       const payload = {
         name: 'CRC',
@@ -222,7 +222,7 @@ describe('courses endpoint', () => {
       const CreateMock = Sinon.mock(server.methods.services.courses)
       CreateMock.expects('create').withArgs(payload).yields(null, mockCourse)
       server.inject({
-        method: 'PUT',
+        method: 'POST',
         payload: { course: payload },
         url: '/api/courses'
       }).then((res) => {
@@ -269,7 +269,7 @@ describe('courses endpoint', () => {
       const CreateMock = Sinon.mock(server.methods.services.courses)
       CreateMock.expects('create').withArgs(payload).yields(mockError, null)
       server.inject({
-        method: 'PUT',
+        method: 'POST',
         payload: { course: payload },
         url: '/api/courses'
       }).then((res) => {
@@ -297,7 +297,7 @@ describe('courses endpoint', () => {
       }
 
       server.inject({
-        method: 'PUT',
+        method: 'POST',
         payload: { course: payload },
         url: '/api/courses'
       }).then((res) => {
@@ -383,7 +383,7 @@ describe('courses endpoint', () => {
     })
   })
 
-  describe('POST /api/courses/{id}', () => {
+  describe('PUT /api/courses/{id}', () => {
     it('should update a course and return updated', (done) => {
       const courseId = '5a2b1f784af2a383c1368258'
       const payload = {
@@ -412,7 +412,7 @@ describe('courses endpoint', () => {
       const UpdateMock = Sinon.mock(server.methods.services.courses)
       UpdateMock.expects('update').withArgs(foundCourseById, payload).yields(null, expectedUpdatedCourse)
       server.inject({
-        method: 'POST',
+        method: 'PUT',
         payload: { course: payload },
         url: `/api/courses/${courseId}`
       }).then((res) => {
@@ -475,7 +475,7 @@ describe('courses endpoint', () => {
       UpdateMock.expects('update').withArgs(foundCourseById, payload).yields(mockError, null)
 
       server.inject({
-        method: 'POST',
+        method: 'PUT',
         payload: { course: payload },
         url: `/api/courses/${courseId}`
       }).then((res) => {
@@ -508,7 +508,7 @@ describe('courses endpoint', () => {
       }
 
       server.inject({
-        method: 'POST',
+        method: 'PUT',
         payload: { course: payload },
         url: `/api/courses/${courseId}`
       }).then((res) => {
@@ -544,7 +544,7 @@ describe('courses endpoint', () => {
       FindByIdMock.expects('findById').withArgs(courseId).yields(mockError, null)
 
       server.inject({
-        method: 'POST',
+        method: 'PUT',
         payload: { course: payload },
         url: `/api/courses/${courseId}`
       }).then((res) => {
@@ -577,7 +577,7 @@ describe('courses endpoint', () => {
       FindByIdMock.expects('findById').withArgs(courseId).yields(null, null)
 
       server.inject({
-        method: 'POST',
+        method: 'PUT',
         payload: { course: payload },
         url: `/api/courses/${courseId}`
       }).then((res) => {

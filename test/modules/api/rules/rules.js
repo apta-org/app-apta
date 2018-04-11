@@ -238,7 +238,7 @@ describe('rules endpoint', () => {
     })
   })
 
-  describe('PUT /api/courses/{id}', () => {
+  describe('POST /api/rules/{id}', () => {
     const course = {
       _id: '5a3c5a2f9116aecdf5b05d65',
       name: 'Inter',
@@ -274,7 +274,7 @@ describe('rules endpoint', () => {
       const CreateMock = Sinon.mock(server.methods.services.rules)
       CreateMock.expects('create').withArgs(methodPayload).yields(null, mockRules[0])
       server.inject({
-        method: 'PUT',
+        method: 'POST',
         payload: { rule: payload },
         url: `/api/rules/${courseId}`
       }).then((res) => {
@@ -330,7 +330,7 @@ describe('rules endpoint', () => {
       const CreateMock = Sinon.mock(server.methods.services.rules)
       CreateMock.expects('create').withArgs(methodPayload).yields(mockError, null)
       server.inject({
-        method: 'PUT',
+        method: 'POST',
         payload: { rule: payload },
         url: `/api/rules/${courseId}`
       }).then((res) => {
@@ -345,7 +345,7 @@ describe('rules endpoint', () => {
     })
   })
 
-  describe('POST /api/courses/{id}', () => {
+  describe('PUT /api/rules/{id}', () => {
     const ruleId = mockRules[0].id
     const payload = {
       name: mockRules[0].name,
@@ -373,7 +373,7 @@ describe('rules endpoint', () => {
       const UpdateMock = Sinon.mock(server.methods.services.rules)
       UpdateMock.expects('update').withArgs(mockRules[0], payload).yields(null, mockResponse)
       server.inject({
-        method: 'POST',
+        method: 'PUT',
         payload: { rule: payload },
         url: `/api/rules/${ruleId}`
       }).then((res) => {
@@ -416,7 +416,7 @@ describe('rules endpoint', () => {
       const UpdateMock = Sinon.mock(server.methods.services.rules)
       UpdateMock.expects('update').withArgs(mockRules[0], payload).yields(mockError, null)
       server.inject({
-        method: 'POST',
+        method: 'PUT',
         payload: { rule: payload },
         url: `/api/rules/${ruleId}`
       }).then((res) => {
@@ -438,7 +438,7 @@ describe('rules endpoint', () => {
       }
 
       server.inject({
-        method: 'POST',
+        method: 'PUT',
         payload: { rule: payload },
         url: '/api/rules/junk_id'
       }).then((res) => {
@@ -460,7 +460,7 @@ describe('rules endpoint', () => {
       FindRuleByIdMock.expects('findRule').withArgs(ruleId).yields(null, null)
 
       server.inject({
-        method: 'POST',
+        method: 'PUT',
         payload: { rule: payload },
         url: `/api/rules/${ruleId}`
       }).then((res) => {
@@ -488,7 +488,7 @@ describe('rules endpoint', () => {
       FindRuleByIdMock.expects('findRule').withArgs(ruleId).yields(mockError, null)
 
       server.inject({
-        method: 'POST',
+        method: 'PUT',
         payload: { rule: payload },
         url: `/api/rules/${ruleId}`
       }).then((res) => {

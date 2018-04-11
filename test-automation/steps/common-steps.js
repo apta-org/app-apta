@@ -44,14 +44,14 @@ defineSupportCode(({ Given, When, Then }) => {
     })
 
   When(
-    /^I make a (course|rule) PUT request using "([^"]*)" with payload$/, (requestAPI, url, payload, callback) => {
+    /^I make a (course|rule) POST request using "([^"]*)" with payload$/, (requestAPI, url, payload, callback) => {
       const jsonPayload = JSON.parse(payload)
       if (requestAPI === 'rule') {
         const courseId = dataMap.get(RESPONSE_VALUE).course.id
         url = url.replace('{courseId}', courseId)
       }
       Chai.request(baseUrl)
-        .put(url)
+        .post(url)
         .set('content-type', 'application/json')
         .send(jsonPayload)
         .then((res) => {
@@ -71,7 +71,7 @@ defineSupportCode(({ Given, When, Then }) => {
       url = url.replace('{id}', dataMap.get(OBJECT_ID))
       const jsonPayload = JSON.parse(payload)
       Chai.request(baseUrl)
-        .post(url)
+        .put(url)
         .set('content-type', 'application/json')
         .send(jsonPayload)
         .then((res) => {
@@ -111,7 +111,7 @@ defineSupportCode(({ Given, When, Then }) => {
     })
 
   Then(
-    /^the (course|rule) response (should|should not) contain a property "([^"]*)"$/, (objectName, expression, property, callback) => {
+    /^the (course|rule|student) response (should|should not) contain a property "([^"]*)"$/, (objectName, expression, property, callback) => {
       const jsonResponse = dataMap.get(RESPONSE_VALUE)
       expect(eval(`jsonResponse.${objectName}`)).to.be.an('object')
       if (expression === 'should not') {
@@ -124,7 +124,7 @@ defineSupportCode(({ Given, When, Then }) => {
     })
 
   Then(
-    /^the (course|rule) response property "([^"]*)" should be "([^"]*)"/, (objectName, expectedProperty, expectedPropertyValue, callback) => {
+    /^the (course|rule|student) response property "([^"]*)" should be "([^"]*)"/, (objectName, expectedProperty, expectedPropertyValue, callback) => {
       const jsonResponse = dataMap.get(RESPONSE_VALUE)
       expect(eval(`jsonResponse.${objectName}`)).to.have.property(expectedProperty, expectedPropertyValue)
       callback()

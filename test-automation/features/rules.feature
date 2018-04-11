@@ -50,11 +50,11 @@ Feature: Rules Feature - As a user, I should be able to access rules API
     | Inter      | 1            | 1          |
     | Inter      | 2            | 2          |
 
-  Scenario: As a user, I request [PUT /api/rules/{courseId}] to create new rule
+  Scenario: As a user, I request [POST /api/rules/{courseId}] to create new rule
     Given I request the API endpoint "/"
     When I make a GET request using "/api/courses/Inter"
     Then I expect the http GET response code to be 200
-    And I make a rule PUT request using "/api/rules/{courseId}" with payload
+    And I make a rule POST request using "/api/rules/{courseId}" with payload
     """
     {
       "rule": {
@@ -66,7 +66,7 @@ Feature: Rules Feature - As a user, I should be able to access rules API
       }
     }
     """
-    And I expect the http PUT response code to be 201
+    And I expect the http POST response code to be 201
     And the rule response should contain a property "id"
     And the rule response should contain a property "course"
     And the rule response property "name" should be "Inter"
@@ -76,11 +76,11 @@ Feature: Rules Feature - As a user, I should be able to access rules API
     And the rule response property "qualifiedMarks" should be 70
     And the rule response property "enabled" should be true
 
-  Scenario: As a user, I request [PUT /api/rules/{courseId}] to create new rule with duplicate fields
+  Scenario: As a user, I request [POST /api/rules/{courseId}] to create new rule with duplicate fields
     Given I request the API endpoint "/"
     When I make a GET request using "/api/courses/Inter"
     Then I expect the http GET response code to be 200
-    And I make a rule PUT request using "/api/rules/{courseId}" with payload
+    And I make a rule POST request using "/api/rules/{courseId}" with payload
     """
     {
       "rule": {
@@ -92,7 +92,7 @@ Feature: Rules Feature - As a user, I should be able to access rules API
       }
     }
     """
-    And I expect the http PUT response code to be 422
+    And I expect the http POST response code to be 422
     And the errors response should contain payload
     """
       {
@@ -104,11 +104,11 @@ Feature: Rules Feature - As a user, I should be able to access rules API
       }
     """
 
-  Scenario: As a user, I request [PUT /api/rules/{courseId}] to create new rule with academicYear zero
+  Scenario: As a user, I request [POST /api/rules/{courseId}] to create new rule with academicYear zero
     Given I request the API endpoint "/"
     When I make a GET request using "/api/courses/Inter"
     Then I expect the http GET response code to be 200
-    And I make a rule PUT request using "/api/rules/{courseId}" with payload
+    And I make a rule POST request using "/api/rules/{courseId}" with payload
     """
     {
       "rule": {
@@ -120,7 +120,7 @@ Feature: Rules Feature - As a user, I should be able to access rules API
       }
     }
     """
-    And I expect the http PUT response code to be 422
+    And I expect the http POST response code to be 422
     And the errors response should contain payload
     """
       {
@@ -130,11 +130,11 @@ Feature: Rules Feature - As a user, I should be able to access rules API
       }
     """
 
-  Scenario: As a user, I request [PUT /api/rules/{courseId}] to create new rule with order zero
+  Scenario: As a user, I request [POST /api/rules/{courseId}] to create new rule with order zero
     Given I request the API endpoint "/"
     When I make a GET request using "/api/courses/Inter"
     Then I expect the http GET response code to be 200
-    And I make a rule PUT request using "/api/rules/{courseId}" with payload
+    And I make a rule POST request using "/api/rules/{courseId}" with payload
     """
     {
       "rule": {
@@ -146,7 +146,7 @@ Feature: Rules Feature - As a user, I should be able to access rules API
       }
     }
     """
-    And I expect the http PUT response code to be 422
+    And I expect the http POST response code to be 422
     And the errors response should contain payload
     """
       {
@@ -156,11 +156,11 @@ Feature: Rules Feature - As a user, I should be able to access rules API
       }
     """
 
-  Scenario: As a user, I request [PUT /api/rules/{courseId}] to create new rule with invalid course id
+  Scenario: As a user, I request [POST /api/rules/{courseId}] to create new rule with invalid course id
     Given I request the API endpoint "/"
     When I make a GET request using "/api/courses/Inter"
     Then I expect the http GET response code to be 200
-    And I make a rule PUT request using "/api/rules/junk_id" with payload
+    And I make a rule POST request using "/api/rules/junk_id" with payload
     """
     {
       "rule": {
@@ -172,7 +172,7 @@ Feature: Rules Feature - As a user, I should be able to access rules API
       }
     }
     """
-    And I expect the http PUT response code to be 400
+    And I expect the http POST response code to be 400
     And the errors response should contain payload
     """
       {
@@ -182,11 +182,11 @@ Feature: Rules Feature - As a user, I should be able to access rules API
       }
     """
 
-  Scenario: As a user, I request [PUT /api/rules/{courseId}] to create new rule with course id that is not existing
+  Scenario: As a user, I request [POST /api/rules/{courseId}] to create new rule with course id that is not existing
     Given I request the API endpoint "/"
     When I make a GET request using "/api/courses/Inter"
     Then I expect the http GET response code to be 200
-    And I make a rule PUT request using "/api/rules/5a2b1f784af2a383c1361234" with payload
+    And I make a rule POST request using "/api/rules/5a2b1f784af2a383c1361234" with payload
     """
     {
       "rule": {
@@ -198,7 +198,7 @@ Feature: Rules Feature - As a user, I should be able to access rules API
       }
     }
     """
-    And I expect the http PUT response code to be 404
+    And I expect the http POST response code to be 404
     And the errors response should contain payload
     """
       {
@@ -208,7 +208,7 @@ Feature: Rules Feature - As a user, I should be able to access rules API
       }
     """
 
-  Scenario: As a user, I request [POST /api/rules/{ruleId}] to update a rule
+  Scenario: As a user, I request [PUT /api/rules/{ruleId}] to update a rule
     Given I request the API endpoint "/"
     When I make a GET request using "/api/rules/Inter"
     Then I expect the http GET response code to be 200
@@ -225,7 +225,7 @@ Feature: Rules Feature - As a user, I should be able to access rules API
       }
     }
     """
-    And I expect the http POST response code to be 200
+    And I expect the http PUT response code to be 200
     And the rule response property "name" should be "Inter"
     And the rule response property "academicYear" should be 1
     And the rule response property "requiredCourseDescription" should be "SSC New"
@@ -233,7 +233,7 @@ Feature: Rules Feature - As a user, I should be able to access rules API
     And the rule response property "qualifiedMarks" should be 70
     And the rule response property "enabled" should be false
 
-  Scenario: As a user, I request [POST /api/rules/{ruleId}] to update a rule with invalid id
+  Scenario: As a user, I request [PUT /api/rules/{ruleId}] to update a rule with invalid id
     Given I request the API endpoint "/"
     When I make an UPDATE request using "/api/rules/junk_id" with payload
     """
@@ -247,7 +247,7 @@ Feature: Rules Feature - As a user, I should be able to access rules API
       }
     }
     """
-    Then I expect the http POST response code to be 400
+    Then I expect the http PUT response code to be 400
     And the errors response should contain payload
     """
       {
@@ -257,7 +257,7 @@ Feature: Rules Feature - As a user, I should be able to access rules API
       }
     """
 
-  Scenario: As a user, I request [POST /api/rules/{ruleId}] to update a rule that is not existing
+  Scenario: As a user, I request [PUT /api/rules/{ruleId}] to update a rule that is not existing
     Given I request the API endpoint "/"
     When I make an UPDATE request using "/api/rules/5a2b1f784af2a383c1361234" with payload
     """
@@ -271,7 +271,7 @@ Feature: Rules Feature - As a user, I should be able to access rules API
       }
     }
     """
-    Then I expect the http POST response code to be 404
+    Then I expect the http PUT response code to be 404
     And the errors response should contain payload
     """
       {

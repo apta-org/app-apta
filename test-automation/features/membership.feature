@@ -95,7 +95,7 @@ Feature: Membership Integration Feature - As a user, I should be able to fetch a
       {
         "errors": {
           "email": [
-            "\"email\" with value \"abd&#x40;\" fails to match the required pattern: /^(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)$/"
+            "\"email\" must be a valid email"
           ]
         }
       }

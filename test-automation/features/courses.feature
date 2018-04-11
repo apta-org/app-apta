@@ -5,9 +5,9 @@ Feature: Courses Feature - As a user, I should be able to access courses API
     Then I expect the http GET response code to be 200
     And I expect the response contains list of courses
 
-  Scenario: As a user, I request [PUT /api/courses] to create new course
+  Scenario: As a user, I request [POST /api/courses] to create new course
     Given I request the API endpoint "/"
-    When I make a course PUT request using "/api/courses" with payload
+    When I make a course POST request using "/api/courses" with payload
     """
     {
       "course": {
@@ -20,16 +20,16 @@ Feature: Courses Feature - As a user, I should be able to access courses API
       }
     }
     """
-    Then I expect the http PUT response code to be 201
+    Then I expect the http POST response code to be 201
     And the course response should contain a property "id"
     And the course response property "name" should be "CRC"
     And the course response property "description" should be "New Course"
     And the course response property "length" should be 5
     And the course response property "rank" should be 100
 
-  Scenario: As a user, I request [PUT /api/courses] to create new course with duplicate fields
+  Scenario: As a user, I request [POST /api/courses] to create new course with duplicate fields
     Given I request the API endpoint "/"
-    When I make a course PUT request using "/api/courses" with payload
+    When I make a course POST request using "/api/courses" with payload
     """
     {
       "course": {
@@ -42,7 +42,7 @@ Feature: Courses Feature - As a user, I should be able to access courses API
       }
     }
     """
-    Then I expect the http PUT response code to be 422
+    Then I expect the http POST response code to be 422
     And the errors response should contain payload
     """
       {
@@ -54,9 +54,9 @@ Feature: Courses Feature - As a user, I should be able to access courses API
       }
     """
 
-  Scenario: As a user, I request [PUT /api/courses] to create new course with length zero
+  Scenario: As a user, I request [POST /api/courses] to create new course with length zero
   Given I request the API endpoint "/"
-  When I make a course PUT request using "/api/courses" with payload
+  When I make a course POST request using "/api/courses" with payload
     """
     {
       "course": {
@@ -69,7 +69,7 @@ Feature: Courses Feature - As a user, I should be able to access courses API
       }
     }
     """
-  Then I expect the http PUT response code to be 422
+  Then I expect the http POST response code to be 422
   And the errors response should contain payload
     """
       {
@@ -79,9 +79,9 @@ Feature: Courses Feature - As a user, I should be able to access courses API
       }
     """
 
-  Scenario: As a user, I request [PUT /api/courses] to create new course with rank zero
+  Scenario: As a user, I request [POST /api/courses] to create new course with rank zero
     Given I request the API endpoint "/"
-    When I make a course PUT request using "/api/courses" with payload
+    When I make a course POST request using "/api/courses" with payload
     """
     {
       "course": {
@@ -94,7 +94,7 @@ Feature: Courses Feature - As a user, I should be able to access courses API
       }
     }
     """
-    Then I expect the http PUT response code to be 422
+    Then I expect the http POST response code to be 422
     And the errors response should contain payload
     """
       {
@@ -104,9 +104,9 @@ Feature: Courses Feature - As a user, I should be able to access courses API
       }
     """
 
-  Scenario: As a user, I request [PUT /api/courses] to create new course with minimumMarks zero
+  Scenario: As a user, I request [POST /api/courses] to create new course with minimumMarks zero
     Given I request the API endpoint "/"
-    When I make a course PUT request using "/api/courses" with payload
+    When I make a course POST request using "/api/courses" with payload
     """
     {
       "course": {
@@ -119,7 +119,7 @@ Feature: Courses Feature - As a user, I should be able to access courses API
       }
     }
     """
-    Then I expect the http PUT response code to be 422
+    Then I expect the http POST response code to be 422
     And the errors response should contain payload
     """
       {
@@ -129,9 +129,9 @@ Feature: Courses Feature - As a user, I should be able to access courses API
       }
     """
 
-  Scenario: As a user, I request [PUT /api/courses] to create new course with invalid allowedForProgram
+  Scenario: As a user, I request [POST /api/courses] to create new course with invalid allowedForProgram
     Given I request the API endpoint "/"
-    When I make a course PUT request using "/api/courses" with payload
+    When I make a course POST request using "/api/courses" with payload
     """
     {
       "course": {
@@ -144,7 +144,7 @@ Feature: Courses Feature - As a user, I should be able to access courses API
       }
     }
     """
-    Then I expect the http PUT response code to be 422
+    Then I expect the http POST response code to be 422
     And the errors response should contain payload
     """
       {
@@ -154,9 +154,9 @@ Feature: Courses Feature - As a user, I should be able to access courses API
       }
     """
 
-  Scenario: As a user, I request [PUT /api/courses] to create new course with missing allowedForProgram
+  Scenario: As a user, I request [POST /api/courses] to create new course with missing allowedForProgram
     Given I request the API endpoint "/"
-    When I make a course PUT request using "/api/courses" with payload
+    When I make a course POST request using "/api/courses" with payload
     """
     {
       "course": {
@@ -168,7 +168,7 @@ Feature: Courses Feature - As a user, I should be able to access courses API
       }
     }
     """
-    Then I expect the http PUT response code to be 422
+    Then I expect the http POST response code to be 422
     And the errors response should contain payload
     """
       {
@@ -178,7 +178,7 @@ Feature: Courses Feature - As a user, I should be able to access courses API
       }
     """
 
-  Scenario: As a user, I request [POST /api/courses] to update a course
+  Scenario: As a user, I request [PUT /api/courses] to update a course
     Given I request the API endpoint "/"
     When I make a GET request using "/api/courses/CRC"
     Then I expect the http GET response code to be 200
@@ -196,7 +196,7 @@ Feature: Courses Feature - As a user, I should be able to access courses API
       }
     }
     """
-    And I expect the http POST response code to be 200
+    And I expect the http PUT response code to be 200
     And the course response should not contain a property "id"
     And the course response property "name" should be "CRC"
     And the course response property "description" should be "New Course 1"
@@ -205,7 +205,7 @@ Feature: Courses Feature - As a user, I should be able to access courses API
     And the course response property "minimumMarks" should be 70
     And the course response property "allowedForProgram" should be true
 
-  Scenario: As a user, I request [POST /api/courses] to update a course with invalid id
+  Scenario: As a user, I request [PUT /api/courses] to update a course with invalid id
     Given I request the API endpoint "/"
     When I make an UPDATE request using "/api/courses/junk_id" with payload
     """
@@ -220,7 +220,7 @@ Feature: Courses Feature - As a user, I should be able to access courses API
       }
     }
     """
-    Then I expect the http POST response code to be 400
+    Then I expect the http PUT response code to be 400
     And the errors response should contain payload
     """
       {
@@ -230,7 +230,7 @@ Feature: Courses Feature - As a user, I should be able to access courses API
       }
     """
 
-  Scenario: As a user, I request [POST /api/courses] to update a course that is not existing
+  Scenario: As a user, I request [PUT /api/courses] to update a course that is not existing
     Given I request the API endpoint "/"
     When I make an UPDATE request using "/api/courses/5a2b1f784af2a383c1361234" with payload
     """
@@ -245,7 +245,7 @@ Feature: Courses Feature - As a user, I should be able to access courses API
       }
     }
     """
-    Then I expect the http POST response code to be 404
+    Then I expect the http PUT response code to be 404
     And the errors response should contain payload
     """
       {
