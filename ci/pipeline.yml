@@ -1,0 +1,84 @@
+resources:
+- name: code-repo
+  type: git
+  source:
+    uri: git@github.com:apta-org/app-apta.git
+    branch: master
+    username: aptatech
+    password: apt@2017
+
+- name: send-an-email
+  type: email
+  source:
+    smtp:
+      host: smtp.gmail.com
+      port: "587"
+      username: apta.apps
+      password: apt@2017
+    from: apta.apps@gmail.com
+    to: ["ravi.kalli@gmail.com"]
+
+jobs:
+- name: version
+  max_in_flight: 1
+  plan:
+  - get: code-repo
+    trigger: true
+  - task: Version
+#    file: scripts/github_version_and_tag.yml
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: hub.docker.com/_/java
+          tag: "latest"
+      inputs:
+        - name: code-repo
+      run:
+        dir: code-repo
+        path: ci/scripts/github_version_and_tag.sh
+
+  on_failure:
+    put: send-an-email
+    params:
+      headers: email_headers
+      subject_text: "Build failed"
+      body_text: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME failed versioning! <$ATC_EXTERNAL_URL/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|  Click for details.>"
+
+#- name: unit-test
+#  max_in_flight: 1
+#  plan:
+#  - get: code-repo
+#    passed: [version]
+#    trigger: true
+#  - task: task-unit-test
+#  config:
+#    platform: linux
+#    inputs:
+#    - name: code-repo
+#    run:
+#      dir: code-repo
+#      path: gulp test
+#    on_failure:
+#      put: send-an-email
+#      params:
+#        headers: email_headers
+#        subject_text: "Build failed"
+#        body_text: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME failed unit testing! <$ATC_EXTERNAL_URL/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|  Click for details.>"
+
+groups:
+- name: master
+  jobs:
+  - version
+#  - unit-test
+
+resource_types:
+- name: email
+  type: docker-image
+  source:
+    repository: pcfseceng/email-resource
+
+
+
+
