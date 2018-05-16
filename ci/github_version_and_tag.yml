@@ -8,4 +8,4 @@ inputs:
   - name: code-repo
 run:
   dir: code-repo
-  path: ../scripts/github_version_and_tag.sh
+  path: scripts/github_version_and_tag.sh
