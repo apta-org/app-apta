@@ -2,6 +2,7 @@ const Gulp = require('gulp')
 const Shell = require('gulp-shell')
 const Nodemon = require('gulp-nodemon')
 const Nightwatch = require('gulp-nightwatch')
+const Del = require('del')
 
 Gulp.task('default', ['start'])
 
@@ -27,4 +28,18 @@ Gulp.task('seed', Shell.task('node node_modules/.bin/md-seed run'))
 
 Gulp.task('start', () => {
   Nodemon({ script: 'bootstrap.js', ext: 'js' })
+})
+
+Gulp.task('clean', () => {
+  Del(['dist'])
+})
+
+Gulp.task('pre-build', () => {
+  Gulp.src(['bootstrap.js', 'package.json', 'README.md'])
+    .pipe(Gulp.dest('dist'))
+})
+
+Gulp.task('build', ['clean', 'pre-build'], () => {
+  Gulp.src(['lib/**/*'])
+    .pipe(Gulp.dest('dist/lib'))
 })
