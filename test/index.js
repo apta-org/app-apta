@@ -31,7 +31,9 @@ describe('index', () => {
   })
 
   it('should start mock json server for membership data in development mode', (done) => {
+    console.log('Before json server')
     MockJSONServer()
+    console.log('After json server')
     Axios.get('http://localhost:9999')
       .then((res) => {
         expect(res.status).to.be.equal(200)
