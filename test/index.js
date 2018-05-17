@@ -16,6 +16,7 @@ describe('index', () => {
   before((done) => {
     LabbableServer.ready((err, srv) => {
       if (err) {
+        console.log('Failed to initialize Labbable Server', err)
         return done(err)
       }
       server = srv
