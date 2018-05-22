@@ -4,7 +4,7 @@ resources:
   source: &code-repo
 #    uri: git@github.com:apta-org/app-apta.git
     uri: https://github.com/apta-org/app-apta.git
-    branch: master
+    branch: feature-pipe-line
     username: XXXXXXX
     password: XXXXXXX
 
