@@ -9,7 +9,7 @@ echo "deb http://repo.mongodb.org/apt/debian wheezy/mongodb-org/3.4 main" > /etc
 
 echo "Installing binaries"
 apt-get update
-apt-get install -y mongodb-org
+apt-get install -y --force-yes mongodb-org
 service mongod stop
 
 
