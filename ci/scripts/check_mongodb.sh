@@ -3,9 +3,8 @@
 echo "Checking if mongodb is running..."
 if mongod --version > /dev/null
 then
-    echo "MongoDB Running!!!"
+    echo "MongoDB is installed!!!"
 else
-    echo "Stopped .. starting MongoDB"
-        #sudo service mongodb start
-        #sh ./install_mongodb.sh
+    echo "MongoDB is not present... starting installation"
+        sh ./install_mongodb.sh
 fi
