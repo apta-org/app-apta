@@ -4,8 +4,8 @@ image_resource:
   source:
     repository: hub.docker.com/_/java
     tag: "latest"
-inputs:
-  - name: code-repo
+#inputs:
+#  - name: code-repo
 run:
-  dir: code-repo
-  path: ci/scripts/github_version_and_tag.sh
+#  dir: code-repo
+  path: code-repo/ci/scripts/github_version_and_tag.sh
