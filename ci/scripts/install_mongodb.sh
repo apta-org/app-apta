@@ -42,7 +42,9 @@ replication:
 
 EOF
 
-sudo service mongod start
+cat /var/log/mongodb/mongod.log
+rm /var/log/mongodb/mongod.log
+service mongod start
 sleep 5
 
 #mongo admin <<'EOF'
