@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Checking if mongodb is running..."
-if pgrep mongod > /dev/null
+if mongod --version > /dev/null
 then
     echo "MongoDB Running!!!"
 else
