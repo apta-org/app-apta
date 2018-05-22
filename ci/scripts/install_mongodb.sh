@@ -42,7 +42,8 @@ replication:
 
 EOF
 
-service mongod start
+#service mongod start
+mongod --dbpath /var/lib/mongodb/
 sleep 5
 
 #mongo admin <<'EOF'
