@@ -44,9 +44,8 @@ EOF
 
 apt-get install sudo
 
-whoami
-sudo service mongod start
-# mongod --dbpath /var/lib/mongodb/ &
+# sudo service mongod start
+nohup mongod --dbpath /var/lib/mongodb/ &
 sleep 5
 
 #mongo admin <<'EOF'
