@@ -685,7 +685,7 @@ describe('students endpoint', () => {
   })
 
   describe('PUT /api/students/{id}', () => {
-    let studentId = '5a7273171a07f76126e8a791'
+    const studentId = '5a7273171a07f76126e8a791'
     const foundStudentById = {
       _id: '5a7273171a07f76126e8a791',
       firstName: 'YAMINI',
@@ -768,7 +768,7 @@ describe('students endpoint', () => {
     })
 
     it('should fail to find a matching student and return invalid student id error', (done) => {
-      studentId = 'junk_id'
+      const studentId1 = 'junk_id'
       const expectedError = {
         errors: {
           400: ['Invalid student id']
@@ -778,7 +778,7 @@ describe('students endpoint', () => {
       server.inject({
         method: 'PUT',
         payload: { student: payload },
-        url: `/api/students/${studentId}`
+        url: `/api/students/${studentId1}`
       }).then((res) => {
         expect(res.statusCode).to.equal(400)
         expect(res.payload).to.be.not.null()
