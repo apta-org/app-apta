@@ -1,9 +1,9 @@
 #!/bin/bash
 
 mongod=/usr/local/mongodb/bin/mongod
-mongod_data=/Users/michito/work/mongodb_data
-mongod_log=/Users/michito/work/mongodb_log/mongodb.log
-prog=mongod.sh
+mongod_data=/var/lib/mongodb
+mongod_log=/var/log/mongodb/mongod.log
+prog=mongo.sh
 RETVAL=0
 
 stop() {
