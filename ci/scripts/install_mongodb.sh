@@ -42,8 +42,10 @@ replication:
 
 EOF
 
-#service mongod start
-mongod --dbpath /var/lib/mongodb/ &
+apt-get install sudo
+
+sudo service mongod start
+# mongod --dbpath /var/lib/mongodb/ &
 sleep 5
 
 #mongo admin <<'EOF'
