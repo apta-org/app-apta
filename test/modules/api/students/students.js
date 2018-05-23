@@ -341,7 +341,7 @@ describe('students endpoint', () => {
     const studentFirstName = 'yamini'
 
     it('should return list of students matching by first name', (done) => {
-      let mockStudents = []
+      const mockStudents = []
       mockStudents.push(mockStudent)
       const StudentMock = Sinon.mock(server.methods.services.students)
       StudentMock.expects('findByFirstName').withArgs(studentFirstName).yields(null, mockStudents)
@@ -410,7 +410,7 @@ describe('students endpoint', () => {
     const studentLastName = 'guntupalli'
 
     it('should return list of students matching by last name', (done) => {
-      let mockStudents = []
+      const mockStudents = []
       mockStudents.push(mockStudent)
       const StudentMock = Sinon.mock(server.methods.services.students)
       StudentMock.expects('findByLastName').withArgs(studentLastName).yields(null, mockStudents)
@@ -479,7 +479,7 @@ describe('students endpoint', () => {
     const studentPhone = '7701234567'
 
     it('should return list of students matching by phone number', (done) => {
-      let mockStudents = []
+      const mockStudents = []
       mockStudents.push(mockStudent)
       const StudentMock = Sinon.mock(server.methods.services.students)
       StudentMock.expects('findByPhone').withArgs(studentPhone).yields(null, mockStudents)
@@ -548,7 +548,7 @@ describe('students endpoint', () => {
     const studentDistrict = 'Guntur Dist'
 
     it('should return list of students matching by district', (done) => {
-      let mockStudents = []
+      const mockStudents = []
       mockStudents.push(mockStudent)
       const StudentMock = Sinon.mock(server.methods.services.students)
       StudentMock.expects('findByLocation').withArgs({ district: studentDistrict }).yields(null, mockStudents)
@@ -685,7 +685,7 @@ describe('students endpoint', () => {
   })
 
   describe('PUT /api/students/{id}', () => {
-    const studentId = '5a7273171a07f76126e8a791'
+    let studentId = '5a7273171a07f76126e8a791'
     const foundStudentById = {
       _id: '5a7273171a07f76126e8a791',
       firstName: 'YAMINI',
@@ -768,7 +768,7 @@ describe('students endpoint', () => {
     })
 
     it('should fail to find a matching student and return invalid student id error', (done) => {
-      const studentId = 'junk_id'
+      studentId = 'junk_id'
       const expectedError = {
         errors: {
           400: ['Invalid student id']

@@ -129,7 +129,7 @@ describe('Service [Student-Referrals]', () => {
     it('should return a referral by student and ASEP year', (done) => {
       ReferralMock
         .expects('findOne')
-        .withArgs({ students: [ mockStudentId ], asepYear: mockYear })
+        .withArgs({ students: [mockStudentId], asepYear: mockYear })
         .chain('populate', 'students')
         .chain('exec')
         .resolves(mockReferral)
@@ -149,7 +149,7 @@ describe('Service [Student-Referrals]', () => {
 
       ReferralMock
         .expects('findOne')
-        .withArgs({ students: [ mockStudentId ], asepYear: mockYear })
+        .withArgs({ students: [mockStudentId], asepYear: mockYear })
         .chain('populate', 'students')
         .chain('exec')
         .resolves(mockError)

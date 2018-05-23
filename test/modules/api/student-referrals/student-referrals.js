@@ -44,7 +44,7 @@ const mockReferral = {
 }
 
 const mockReferralObj = new Referral(Object.assign(mockReferral))
-mockReferralObj.students = [ new Student(Object.assign(mockReferral.students[0])) ]
+mockReferralObj.students = [new Student(Object.assign(mockReferral.students[0]))]
 
 const assertStudent = (result) => {
   const mockStudent = mockReferral.students[0]
@@ -225,7 +225,7 @@ describe('student-referral end point', () => {
 
   describe('GET /api/referrals/by-student?email={email}&year={asepYear}', () => {
     let studentEmail = 'yamini@gmail.com'
-    let year = '2018'
+    const year = '2018'
 
     beforeEach((done) => {
       Object.defineProperty(server, 'methods', {
@@ -392,7 +392,7 @@ describe('student-referral end point', () => {
   })
 
   describe('GET /api/referrals/by-year?year={asepYear}', () => {
-    let year = '2018'
+    const year = '2018'
 
     it('should return list of referral by ASEP year', (done) => {
       const ReferralMock = Sinon.mock(server.methods.services.studentreferrals)
@@ -438,8 +438,8 @@ describe('student-referral end point', () => {
   })
 
   describe('GET /api/referrals/by-member-email?memberEmail={email}&year={asepYear}', () => {
-    let memberEmail = 'ravi.kalli@gmail.com'
-    let year = '2018'
+    const memberEmail = 'ravi.kalli@gmail.com'
+    const year = '2018'
 
     it('should return list of referrals by member email and ASEP year', (done) => {
       const ReferralMock = Sinon.mock(server.methods.services.studentreferrals)
@@ -485,9 +485,9 @@ describe('student-referral end point', () => {
   })
 
   describe('GET /api/referrals/by-member?memberFirstName={firstName}&memberLastName={lastName}&year={asepYear}', () => {
-    let memberFirstName = 'ravi'
-    let memberLastName = 'kalli'
-    let year = '2018'
+    const memberFirstName = 'ravi'
+    const memberLastName = 'kalli'
+    const year = '2018'
 
     it('should return list of referrals by member name and ASEP year', (done) => {
       const ReferralMock = Sinon.mock(server.methods.services.studentreferrals)
@@ -752,9 +752,9 @@ describe('student-referral end point', () => {
   })
 
   describe('GET /api/referrals/verify/{hash}', () => {
-    let studentEmail = 'yamini@gmail.com'
-    let year = '2018'
-    let mockHash = 'a01387d6700297410683e33b'
+    const studentEmail = 'yamini@gmail.com'
+    const year = '2018'
+    const mockHash = 'a01387d6700297410683e33b'
 
     beforeEach((done) => {
       Object.defineProperty(server, 'methods', {

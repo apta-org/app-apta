@@ -187,7 +187,7 @@ describe('Service [Student]', () => {
   describe('fetch students matching by first name', () => {
     const studentFirstName = 'Yamini'
     let StudentMock
-    let mockStudents = []
+    const mockStudents = []
     mockStudents.push(mockStudent)
 
     beforeEach((done) => {
@@ -234,7 +234,7 @@ describe('Service [Student]', () => {
   describe('fetch students matching by last name', () => {
     const studentLastName = 'Guntupalli'
     let StudentMock
-    let mockStudents = []
+    const mockStudents = []
     mockStudents.push(mockStudent)
 
     beforeEach((done) => {
@@ -281,7 +281,7 @@ describe('Service [Student]', () => {
   describe('fetch students matching by phone number', () => {
     const studentPhoneNumber = '7701234567'
     let StudentMock
-    let mockStudents = []
+    const mockStudents = []
     mockStudents.push(mockStudent)
 
     beforeEach((done) => {
@@ -328,7 +328,7 @@ describe('Service [Student]', () => {
   describe('fetch students belong to same city', () => {
     const studentCity = 'guntur'
     let StudentMock
-    let mockStudents = []
+    const mockStudents = []
     mockStudents.push(mockStudent)
 
     beforeEach((done) => {
@@ -375,7 +375,7 @@ describe('Service [Student]', () => {
   describe('fetch students belong to same district', () => {
     const studentDistrict = 'guntur dist'
     let StudentMock
-    let mockStudents = []
+    const mockStudents = []
     mockStudents.push(mockStudent)
 
     beforeEach((done) => {
@@ -422,7 +422,7 @@ describe('Service [Student]', () => {
   describe('fetch students belong to same state', () => {
     const studentState = 'Andhra Pradesh'
     let StudentMock
-    let mockStudents = []
+    const mockStudents = []
     mockStudents.push(mockStudent)
 
     beforeEach((done) => {
@@ -469,7 +469,7 @@ describe('Service [Student]', () => {
   describe('fetch students belong to same pinCode', () => {
     const studentPinCode = '500001'
     let StudentMock
-    let mockStudents = []
+    const mockStudents = []
     mockStudents.push(mockStudent)
 
     beforeEach((done) => {

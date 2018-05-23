@@ -66,7 +66,7 @@ describe('members endpoint', () => {
       MembersMock.expects('findMember').withArgs({ phone: '7701230000' }).yields(null, mockMembers)
       server.inject({
         method: 'GET',
-        url: `/api/member?phone=7701230000`
+        url: '/api/member?phone=7701230000'
       }).then((res) => {
         MembersMock.verify()
         MembersMock.restore()
@@ -94,7 +94,7 @@ describe('members endpoint', () => {
       MembersMock.expects('findMember').withArgs({ phone: '7701230000' }).yields(null, null)
       server.inject({
         method: 'GET',
-        url: `/api/member?phone=7701230000`
+        url: '/api/member?phone=7701230000'
       }).then((res) => {
         MembersMock.verify()
         MembersMock.restore()
@@ -118,7 +118,7 @@ describe('members endpoint', () => {
       MembersMock.expects('findMember').withArgs({ phone: '7701230000' }).yields(mockError, null)
       server.inject({
         method: 'GET',
-        url: `/api/member?phone=7701230000`
+        url: '/api/member?phone=7701230000'
       }).then((res) => {
         MembersMock.verify()
         MembersMock.restore()
