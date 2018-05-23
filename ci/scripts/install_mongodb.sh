@@ -42,7 +42,6 @@ replication:
 
 EOF
 
-cat /var/log/mongodb/mongod.log
 rm /var/log/mongodb/mongod.log
 service mongod start
 sleep 5
