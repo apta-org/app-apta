@@ -341,7 +341,7 @@ describe('students endpoint', () => {
     const studentFirstName = 'yamini'
 
     it('should return list of students matching by first name', (done) => {
-      let mockStudents = []
+      const mockStudents = []
       mockStudents.push(mockStudent)
       const StudentMock = Sinon.mock(server.methods.services.students)
       StudentMock.expects('findByFirstName').withArgs(studentFirstName).yields(null, mockStudents)
@@ -410,7 +410,7 @@ describe('students endpoint', () => {
     const studentLastName = 'guntupalli'
 
     it('should return list of students matching by last name', (done) => {
-      let mockStudents = []
+      const mockStudents = []
       mockStudents.push(mockStudent)
       const StudentMock = Sinon.mock(server.methods.services.students)
       StudentMock.expects('findByLastName').withArgs(studentLastName).yields(null, mockStudents)
@@ -479,7 +479,7 @@ describe('students endpoint', () => {
     const studentPhone = '7701234567'
 
     it('should return list of students matching by phone number', (done) => {
-      let mockStudents = []
+      const mockStudents = []
       mockStudents.push(mockStudent)
       const StudentMock = Sinon.mock(server.methods.services.students)
       StudentMock.expects('findByPhone').withArgs(studentPhone).yields(null, mockStudents)
@@ -548,7 +548,7 @@ describe('students endpoint', () => {
     const studentDistrict = 'Guntur Dist'
 
     it('should return list of students matching by district', (done) => {
-      let mockStudents = []
+      const mockStudents = []
       mockStudents.push(mockStudent)
       const StudentMock = Sinon.mock(server.methods.services.students)
       StudentMock.expects('findByLocation').withArgs({ district: studentDistrict }).yields(null, mockStudents)
@@ -768,7 +768,7 @@ describe('students endpoint', () => {
     })
 
     it('should fail to find a matching student and return invalid student id error', (done) => {
-      const studentId = 'junk_id'
+      const studentId1 = 'junk_id'
       const expectedError = {
         errors: {
           400: ['Invalid student id']
@@ -778,7 +778,7 @@ describe('students endpoint', () => {
       server.inject({
         method: 'PUT',
         payload: { student: payload },
-        url: `/api/students/${studentId}`
+        url: `/api/students/${studentId1}`
       }).then((res) => {
         expect(res.statusCode).to.equal(400)
         expect(res.payload).to.be.not.null()

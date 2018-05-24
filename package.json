@@ -8,7 +8,8 @@
     "start": "gulp start",
     "quality": "gulp quality",
     "e2e": "gulp e2e",
-    "seed": "gulp seed"
+    "seed": "gulp seed",
+    "build": "gulp build"
   },
   "main": "lib/index.js",
   "author": {
@@ -55,6 +56,7 @@
     "cucumber": "^3.1.0",
     "cucumber-html-reporter": "^3.0.4",
     "cucumber-pretty": "0.0.5",
+    "del": "^3.0.0",
     "eslint-config-hapi": "^11.1.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-hapi": "^4.1.0",

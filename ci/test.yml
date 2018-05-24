@@ -1,0 +1,42 @@
+  resources:
+  - name: code-repo
+    type: git
+    source:
+      uri: https://github.com/apta-org/app-apta.git
+      branch: master
+      username: XXXXXXX
+      password: XXXXXXX
+
+jobs:
+- name: build
+  max_in_flight: 1
+  plan:
+  - get: code-repo
+    trigger: true
+  - task: task-build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: node
+          tag: '8.9.1'
+      inputs:
+        - name: code-repo
+      outputs:
+        - name: cache
+      run:
+        dir: code-repo
+        path: sh
+        args:
+          - -exc
+          - |
+            npm install
+            npm install gulp-cli -g
+            cp -r node_modules ../cache
+            gulp build
+
+  groups:
+  - name: master
+    jobs:
+    - build

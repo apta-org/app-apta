@@ -1,0 +1,214 @@
+resources:
+- name: code-repo
+  type: git
+  source: &code-repo
+#    uri: git@github.com:apta-org/app-apta.git
+    uri: https://github.com/apta-org/app-apta.git
+    branch: master
+    username: XXXXXXX
+    password: XXXXXXX
+
+- name: code-repo-pull-request
+  type: pull-request
+  source:
+    uri: https://github.com/apta-org/app-apta.git
+    username: XXXXXXX
+    password: XXXXXXX
+    api_endpoint: https://github.com/api/v3
+    skip_ssl_verification: true
+    repo: apta-org/app-apta
+
+- name: send-an-email
+  type: email
+  source:
+    smtp:
+      host: smtp.gmail.com
+      port: "587"
+      username: XXXXXXX
+      password: XXXXXXX
+    from: apta.apps@gmail.com
+    to: ["ravi.kalli@gmail.com"]
+
+jobs:
+#- name: version
+#  max_in_flight: 1
+#  plan:
+#  - get: code-repo
+#    trigger: true
+#  - task: Version
+#    file: code-repo/ci/github_version_and_tag.yml
+#  on_failure:
+#    put: send-an-email
+#    params:
+#      headers: email_headers
+#      subject_text: "Build failed"
+#      body_text: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME failed versioning! <$ATC_EXTERNAL_URL/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|  Click for details.>"
+
+- name: pull-request-test
+  max_in_flight: 1
+  plan:
+  - get: code-repo-pull-request
+    trigger: true
+    params:
+      version: every
+      fetch_merge: true
+  - put: code-repo-pull-request
+    params:
+      path: code-repo-pull-request
+      status: pending
+      context: unit test
+  - put: code-repo-pull-request
+    params:
+      path: code-repo-pull-request
+      status: pending
+      context: code quality
+#  - task: task-npm-install
+#      config:
+#        platform: linux
+#        image_resource:
+#          type: docker-image
+#          source:
+#            repository: node
+#            tag: '8.9.1'
+#        inputs:
+#          - name: code-repo
+#        outputs:
+#          - name: cache
+#        run:
+#          dir: code-repo
+#          path: sh
+#          args:
+#            - -exc
+#            - |
+#              npm install
+#              cp -r node_modules ../cache
+
+- name: build
+  max_in_flight: 1
+  plan:
+  - get: code-repo
+    trigger: true
+  - task: task-build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: node
+          tag: '8.9.1'
+      inputs:
+        - name: code-repo
+      outputs:
+        - name: cache
+      run:
+        dir: code-repo
+        path: sh
+        args:
+          - -exc
+          - |
+            npm install
+            npm install gulp-cli -g
+            cp -r node_modules ../cache
+            gulp build
+    on_failure:
+      put: send-an-email
+      params:
+        subject_text: "Build failed"
+        body_text: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME failed to build! <$ATC_EXTERNAL_URL/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|  Click for details.>"
+
+- name: unit-test
+  max_in_flight: 1
+  plan:
+  - get: code-repo
+    passed: [build]
+    trigger: true
+  - task: task-unit-test
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: node
+          tag: '8.9.1'
+      inputs:
+        - name: code-repo
+      outputs:
+        - name: cache
+      run:
+        dir: code-repo
+        path: sh
+        args:
+          - -exc
+          - |
+            npm install
+            npm install gulp-cli -g
+            npm install -g json-server
+            cp -r node_modules ../cache
+            ci/scripts/check_mongodb.sh
+            mongod --version
+            gulp test
+    on_failure:
+      put: send-an-email
+      params:
+        subject_text: "Build failed"
+        body_text: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME failed unit testing! <$ATC_EXTERNAL_URL/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|  Click for details.>"
+
+- name: code-quality
+  max_in_flight: 1
+  plan:
+  - get: code-repo
+    passed: [unit-test]
+    trigger: true
+  - task: task-code-quality
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: node
+          tag: '8.9.1'
+      inputs:
+        - name: code-repo
+      outputs:
+        - name: cache
+      run:
+        dir: code-repo
+        path: sh
+        args:
+          - -exc
+          - |
+            npm install
+            npm install gulp-cli -g
+            cp -r node_modules ../cache
+            gulp quality
+    on_failure:
+      put: send-an-email
+      params:
+        subject_text: "Build failed"
+        body_text: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME failed code quality! <$ATC_EXTERNAL_URL/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|  Click for details.>"
+
+groups:
+- name: master
+  jobs:
+#  - version
+  - build
+  - unit-test
+  - code-quality
+- name: pull-requests
+  jobs:
+  - pull-request-test
+
+resource_types:
+- name: email
+  type: docker-image
+  source:
+    repository: pcfseceng/email-resource
+
+- name: pull-request
+  type: docker-image
+  source:
+    repository: jtarchie/pr
+    tag: "latest"
+
+
+

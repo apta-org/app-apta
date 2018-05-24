@@ -1,0 +1,14 @@
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: hub.docker.com/_/java
+    tag: "latest"
+inputs:
+  - name: ci
+  - name: code-repo
+  - name: release
+    optional: true
+run:
+  dir: code-repo
+  path: ../scripts/tracker_label_stories.sh

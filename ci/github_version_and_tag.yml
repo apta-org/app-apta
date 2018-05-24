@@ -1,0 +1,11 @@
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: hub.docker.com/_/java
+    tag: "latest"
+#inputs:
+#  - name: code-repo
+run:
+#  dir: code-repo
+  path: code-repo/ci/scripts/github_version_and_tag.sh
