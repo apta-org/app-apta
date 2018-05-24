@@ -4,7 +4,7 @@ resources:
   source: &code-repo
 #    uri: git@github.com:apta-org/app-apta.git
     uri: https://github.com/apta-org/app-apta.git
-    branch: feature-pipe-line
+    branch: master
     username: XXXXXXX
     password: XXXXXXX
 
@@ -24,7 +24,7 @@ resources:
     smtp:
       host: smtp.gmail.com
       port: "587"
-      username: apta.apps%40gmail.com
+      username: XXXXXXX
       password: XXXXXXX
     from: apta.apps@gmail.com
     to: ["ravi.kalli@gmail.com"]
@@ -87,7 +87,6 @@ jobs:
   max_in_flight: 1
   plan:
   - get: code-repo
-#    passed: [version]
     trigger: true
   - task: task-build
     config:
@@ -145,7 +144,8 @@ jobs:
             npm install gulp-cli -g
             npm install -g json-server
             cp -r node_modules ../cache
-            scripts/check_mongodb.sh
+            ci/scripts/check_mongodb.sh
+            mongod --version
             gulp test
     on_failure:
       put: send-an-email
