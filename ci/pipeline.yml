@@ -14,7 +14,7 @@ resources:
     uri: https://github.com/apta-org/app-apta.git
     username: XXXXXXX
     password: XXXXXXX
-    api_endpoint: https://github.com/api/v3
+    api_endpoint: https://api.github.com
     skip_ssl_verification: true
     repo: apta-org/app-apta
 
@@ -29,12 +29,88 @@ resources:
     from: apta.apps@gmail.com
     to: ["ravi.kalli@gmail.com"]
 
+reusable-tasks:
+  task-build: &task-build
+    task: task-build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: node
+          tag: '8.9.1'
+      inputs:
+        - name: code-repo
+      outputs:
+        - name: cache
+      run:
+        dir: code-repo
+        path: sh
+        args:
+          - -exc
+          - |
+            npm install
+            npm install gulp-cli -g
+            cp -r node_modules ../cache
+            gulp build
+
+  task-unit-test: &task-unit-test
+    task: task-unit-test
+    config: &config-unit-test
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: node
+          tag: '8.9.1'
+      inputs:
+        - name: code-repo
+      outputs:
+        - name: cache
+      run:
+        dir: code-repo
+        path: sh
+        args:
+          - -exc
+          - |
+            npm install
+            npm install gulp-cli -g
+            npm install -g json-server
+            cp -r node_modules ../cache
+            ci/scripts/check_mongodb.sh
+            mongod --version
+            gulp test
+
+  task-code-quality: &task-code-quality
+    task: task-code-quality
+    config: &config-code-quality
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: node
+          tag: '8.9.1'
+      inputs:
+        - name: code-repo
+      outputs:
+        - name: cache
+      run:
+        dir: code-repo
+        path: sh
+        args:
+          - -exc
+          - |
+            npm install
+            npm install gulp-cli -g
+            cp -r node_modules ../cache
+            gulp quality
+
 jobs:
-#- name: version
-#  max_in_flight: 1
-#  plan:
-#  - get: code-repo
-#    trigger: true
+- name: version
+  max_in_flight: 1
+  plan:
+  - get: code-repo
+    trigger: true
 #  - task: Version
 #    file: code-repo/ci/github_version_and_tag.yml
 #  on_failure:
@@ -62,33 +138,7 @@ jobs:
       path: code-repo-pull-request
       status: pending
       context: code quality
-#  - task: task-npm-install
-#      config:
-#        platform: linux
-#        image_resource:
-#          type: docker-image
-#          source:
-#            repository: node
-#            tag: '8.9.1'
-#        inputs:
-#          - name: code-repo
-#        outputs:
-#          - name: cache
-#        run:
-#          dir: code-repo
-#          path: sh
-#          args:
-#            - -exc
-#            - |
-#              npm install
-#              cp -r node_modules ../cache
-
-- name: build
-  max_in_flight: 1
-  plan:
-  - get: code-repo
-    trigger: true
-  - task: task-build
+  - task: task-npm-install
     config:
       platform: linux
       image_resource:
@@ -97,7 +147,8 @@ jobs:
           repository: node
           tag: '8.9.1'
       inputs:
-        - name: code-repo
+        - name: code-repo-pull-request
+          path: code-repo
       outputs:
         - name: cache
       run:
@@ -107,9 +158,45 @@ jobs:
           - -exc
           - |
             npm install
-            npm install gulp-cli -g
             cp -r node_modules ../cache
-            gulp build
+
+  - <<: *task-unit-test
+    config:
+      <<: *config-unit-test
+      inputs:
+        - name: code-repo-pull-request
+          path: /code-repo
+#        - name: cache
+    on_failure:
+      put: code-repo-pull-request
+      params:
+        path: code-repo-pull-request
+        status: failure
+        context: unit test
+
+  - <<: *task-code-quality
+    config:
+      <<: *config-code-quality
+      inputs:
+        - name: code-repo-pull-request
+          path: /code-repo
+#        - name: cache
+    on_failure:
+      put: code-repo-pull-request
+      params:
+        path: code-repo-pull-request
+        status: failure
+        context: code quality
+
+- name: build
+  max_in_flight: 1
+  plan:
+  - get: code-repo
+    trigger: true
+    passed: [version]
+
+  - <<: *task-build
+
     on_failure:
       put: send-an-email
       params:
@@ -122,31 +209,9 @@ jobs:
   - get: code-repo
     passed: [build]
     trigger: true
-  - task: task-unit-test
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: node
-          tag: '8.9.1'
-      inputs:
-        - name: code-repo
-      outputs:
-        - name: cache
-      run:
-        dir: code-repo
-        path: sh
-        args:
-          - -exc
-          - |
-            npm install
-            npm install gulp-cli -g
-            npm install -g json-server
-            cp -r node_modules ../cache
-            ci/scripts/check_mongodb.sh
-            mongod --version
-            gulp test
+
+  - <<: *task-unit-test
+
     on_failure:
       put: send-an-email
       params:
@@ -159,28 +224,9 @@ jobs:
   - get: code-repo
     passed: [unit-test]
     trigger: true
-  - task: task-code-quality
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: node
-          tag: '8.9.1'
-      inputs:
-        - name: code-repo
-      outputs:
-        - name: cache
-      run:
-        dir: code-repo
-        path: sh
-        args:
-          - -exc
-          - |
-            npm install
-            npm install gulp-cli -g
-            cp -r node_modules ../cache
-            gulp quality
+
+  - <<: *task-code-quality
+
     on_failure:
       put: send-an-email
       params:
@@ -190,7 +236,7 @@ jobs:
 groups:
 - name: master
   jobs:
-#  - version
+  - version
   - build
   - unit-test
   - code-quality
@@ -209,6 +255,3 @@ resource_types:
   source:
     repository: jtarchie/pr
     tag: "latest"
-
-
-
