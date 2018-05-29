@@ -12,8 +12,7 @@ resources:
   type: pull-request
   source:
     uri: https://github.com/apta-org/app-apta.git
-    username: XXXXXXX
-    password: XXXXXXX
+    access_token: XXXXXXXXXXXXXXXX
     api_endpoint: https://api.github.com
     skip_ssl_verification: true
     repo: apta-org/app-apta
@@ -167,6 +166,12 @@ jobs:
         - name: code-repo-pull-request
           path: /code-repo
 #        - name: cache
+    on_success:
+      put: code-repo-pull-request
+      params:
+        path: code-repo-pull-request
+        status: success
+        context: unit test
     on_failure:
       put: code-repo-pull-request
       params:
@@ -181,6 +186,12 @@ jobs:
         - name: code-repo-pull-request
           path: /code-repo
 #        - name: cache
+    on_success:
+      put: code-repo-pull-request
+      params:
+        path: code-repo-pull-request
+        status: success
+        context: unit test
     on_failure:
       put: code-repo-pull-request
       params:
