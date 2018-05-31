@@ -1,7 +1,7 @@
 resources:
 - name: code-repo
   type: git
-  source: &code-repo
+  source: &repo-source
 #    uri: git@github.com:apta-org/app-apta.git
     uri: https://github.com/apta-org/app-apta.git
     branch: master
@@ -28,10 +28,18 @@ resources:
     from: apta.apps@gmail.com
     to: ["ravi.kalli@gmail.com"]
 
+- name: npm-repo-cache
+  type: npm-cache
+  source:
+    <<: *repo-source
+    yarn-support: true
+    paths:
+      - package.json
+
 reusable-tasks:
   task-build: &task-build
     task: task-build
-    config:
+    config: &config-build
       platform: linux
       image_resource:
         type: docker-image
@@ -64,18 +72,17 @@ reusable-tasks:
           tag: '8.9.1'
       inputs:
         - name: code-repo
-      outputs:
-        - name: cache
+        - name: npm-repo-cache
+          path: cache
       run:
         dir: code-repo
         path: sh
         args:
           - -exc
           - |
-            npm install
-            npm install gulp-cli -g
             npm install -g json-server
-            cp -r node_modules ../cache
+            cp -r cache/node_modules code-repo
+            cd code-repo
             ci/scripts/check_mongodb.sh
             mongod --version
             gulp test
@@ -91,17 +98,16 @@ reusable-tasks:
           tag: '8.9.1'
       inputs:
         - name: code-repo
-      outputs:
-        - name: cache
+        - name: npm-repo-cache
+          path: cache
       run:
         dir: code-repo
         path: sh
         args:
           - -exc
           - |
-            npm install
-            npm install gulp-cli -g
-            cp -r node_modules ../cache
+            cp -r cache/node_modules code-repo
+            cd code-repo
             gulp quality
 
 jobs:
@@ -118,6 +124,13 @@ jobs:
 #      headers: email_headers
 #      subject_text: "Build failed"
 #      body_text: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME failed versioning! <$ATC_EXTERNAL_URL/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|  Click for details.>"
+
+- name: cache
+  plan:
+    - get: code-repo
+      trigger: true
+      passed: [version]
+    - get: npm-repo-cache
 
 - name: pull-request-test
   max_in_flight: 1
@@ -137,27 +150,25 @@ jobs:
       path: code-repo-pull-request
       status: pending
       context: code quality
-  - task: task-npm-install
+
+  - <<: *task-build
     config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: node
-          tag: '8.9.1'
+      <<: *config-build
       inputs:
         - name: code-repo-pull-request
-          path: code-repo
-      outputs:
-        - name: cache
-      run:
-        dir: code-repo
-        path: sh
-        args:
-          - -exc
-          - |
-            npm install
-            cp -r node_modules ../cache
+          path: /code-repo
+    on_success:
+      put: code-repo-pull-request
+      params:
+        path: code-repo-pull-request
+        status: success
+        context: build
+    on_failure:
+      put: code-repo-pull-request
+      params:
+        path: code-repo-pull-request
+        status: failure
+        context: build
 
   - <<: *task-unit-test
     config:
@@ -165,7 +176,7 @@ jobs:
       inputs:
         - name: code-repo-pull-request
           path: /code-repo
-#        - name: cache
+        - name: cache
     on_success:
       put: code-repo-pull-request
       params:
@@ -185,7 +196,7 @@ jobs:
       inputs:
         - name: code-repo-pull-request
           path: /code-repo
-#        - name: cache
+        - name: cache
     on_success:
       put: code-repo-pull-request
       params:
@@ -204,7 +215,7 @@ jobs:
   plan:
   - get: code-repo
     trigger: true
-    passed: [version]
+    passed: [cache]
 
   - <<: *task-build
 
@@ -248,6 +259,7 @@ groups:
 - name: master
   jobs:
   - version
+  - cache
   - build
   - unit-test
   - code-quality
@@ -265,4 +277,10 @@ resource_types:
   type: docker-image
   source:
     repository: jtarchie/pr
+    tag: "latest"
+
+- name: npm-cache
+  type: docker-image
+  source:
+    repository: ymedlop/npm-cache-resource
     tag: "latest"
